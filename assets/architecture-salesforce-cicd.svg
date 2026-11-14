@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="t d"><title id="t">Salesforce CI/CD release engineering reference pipeline</title><desc id="d">Illustrative Salesforce delivery pipeline showing developer work, Salesforce DX, Git, Copado, automated validation, sandbox governance, UAT and production validation.</desc>
+<defs><style>
+.bg{fill:#f5f8fc}.box{fill:#fff;stroke:#c8d9ec;stroke-width:2;rx:16}.primary{fill:#e8f3ff;stroke:#1479e8;stroke-width:3;rx:18}.dark{fill:#082754}.teal{fill:#e8f8fb;stroke:#4fb8d0;stroke-width:2;rx:14}.soft{fill:#f2f7fc;stroke:#dce7f3;stroke-width:2;rx:14}.t{font:700 20px Arial,sans-serif;fill:#082754}.s{font:15px Arial,sans-serif;fill:#526783}.w{font:700 20px Arial,sans-serif;fill:#fff}.line{stroke:#1479e8;stroke-width:4;fill:none;stroke-linecap:round}.dash{stroke:#7d9ab9;stroke-width:3;stroke-dasharray:8 8;fill:none}.pill{fill:#dff5fa;stroke:#8dd4e3;stroke-width:1.5;rx:10}.pt{font:700 14px Arial,sans-serif;fill:#14607a}
+</style><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#1479e8"/></marker></defs>
+<rect class="bg" width="1200" height="680" rx="24"/>
+<text x="54" y="58" class="t" font-size="28">SALESFORCE DX | CI/CD + RELEASE GOVERNANCE</text>
+<text x="54" y="88" class="s">Illustrative pipeline based on Salesforce DX, Git, Copado and validation governance</text>
+<rect x="55" y="190" width="170" height="135" class="box"/><text x="140" y="235" text-anchor="middle" class="t">Developer</text><text x="140" y="270" text-anchor="middle" class="s">Build / test</text>
+<path d="M225 258 H280" class="line" marker-end="url(#a)"/>
+<rect x="285" y="190" width="170" height="135" class="primary"/><text x="370" y="235" text-anchor="middle" class="t">Salesforce DX</text><text x="370" y="270" text-anchor="middle" class="s">Source format</text>
+<path d="M455 258 H510" class="line" marker-end="url(#a)"/>
+<rect x="515" y="190" width="170" height="135" class="primary"/><text x="600" y="235" text-anchor="middle" class="t">Git</text><text x="600" y="270" text-anchor="middle" class="s">Branches / change</text>
+<path d="M685 258 H740" class="line" marker-end="url(#a)"/>
+<rect x="745" y="190" width="170" height="135" class="primary"/><text x="830" y="235" text-anchor="middle" class="t">Copado</text><text x="830" y="270" text-anchor="middle" class="s">Release orchestration</text>
+<path d="M915 258 H970" class="line" marker-end="url(#a)"/>
+<rect x="975" y="190" width="170" height="135" class="teal"/><text x="1060" y="235" text-anchor="middle" class="t">Validation</text><text x="1060" y="270" text-anchor="middle" class="s">Quality gates</text>
+<path d="M1060 325 V420" class="line" marker-end="url(#a)"/>
+<rect x="150" y="425" width="900" height="145" class="soft"/><text x="600" y="465" text-anchor="middle" class="t">Environment and release governance</text>
+<rect x="205" y="490" width="225" height="50" class="pill"/><text x="317" y="521" text-anchor="middle" class="pt">Sandbox environments</text>
+<rect x="487" y="490" width="225" height="50" class="pill"/><text x="600" y="521" text-anchor="middle" class="pt">UAT validation</text>
+<rect x="770" y="490" width="225" height="50" class="pill"/><text x="882" y="521" text-anchor="middle" class="pt">Production validation</text>
+<text x="54" y="635" class="s" font-size="13">Illustrative flow; exact org environment topology and approval sequence are not disclosed.</text></svg>
