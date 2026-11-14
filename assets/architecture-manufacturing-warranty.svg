@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="t d"><title id="t">Manufacturing Cloud warranty management reference architecture</title><desc id="d">Conceptual diagram showing regional users, a Salesforce Manufacturing Cloud warranty management platform, Apex and Lightning development, asynchronous and event-driven processing, integrations, security and CI/CD governance.</desc>
+<defs><style>
+.bg{fill:#f5f8fc}.box{fill:#fff;stroke:#c8d9ec;stroke-width:2;rx:16}.primary{fill:#e8f3ff;stroke:#1479e8;stroke-width:3;rx:18}.dark{fill:#082754}.teal{fill:#e8f8fb;stroke:#4fb8d0;stroke-width:2;rx:14}.soft{fill:#f2f7fc;stroke:#dce7f3;stroke-width:2;rx:14}.t{font:700 22px Arial,sans-serif;fill:#082754}.s{font:16px Arial,sans-serif;fill:#526783}.w{font:700 22px Arial,sans-serif;fill:#fff}.line{stroke:#1479e8;stroke-width:4;fill:none;stroke-linecap:round}.dash{stroke:#7d9ab9;stroke-width:3;stroke-dasharray:8 8;fill:none}.pill{fill:#dff5fa;stroke:#8dd4e3;stroke-width:1.5;rx:10}.pt{font:700 14px Arial,sans-serif;fill:#14607a}
+</style><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#1479e8"/></marker></defs>
+<rect class="bg" width="1200" height="680" rx="24"/>
+<text x="54" y="58" class="t" font-size="28">MANUFACTURING CLOUD | WARRANTY MANAGEMENT</text>
+<text x="54" y="88" class="s">Conceptual portfolio-level view based on documented platform scope</text>
+<rect x="54" y="132" width="250" height="180" class="box"/><text x="82" y="171" class="t">Business users</text><text x="82" y="210" class="s">Regional operations</text><text x="82" y="239" class="s">Warranty teams</text><text x="82" y="268" class="s">1,200+ users</text>
+<path d="M304 220 H385" class="line" marker-end="url(#a)"/>
+<rect x="390" y="122" width="440" height="340" class="primary"/><rect x="390" y="122" width="440" height="66" class="dark" rx="18"/><text x="610" y="163" text-anchor="middle" class="w">Salesforce Manufacturing Cloud</text>
+<text x="425" y="230" class="t">Warranty Management platform</text>
+<rect x="425" y="256" width="170" height="70" class="box"/><text x="510" y="285" text-anchor="middle" class="t" font-size="18">Apex / LWC</text><text x="510" y="308" text-anchor="middle" class="s">Custom logic + UI</text>
+<rect x="625" y="256" width="170" height="70" class="box"/><text x="710" y="285" text-anchor="middle" class="t" font-size="18">Flows</text><text x="710" y="308" text-anchor="middle" class="s">Automation</text>
+<rect x="425" y="354" width="170" height="70" class="teal"/><text x="510" y="383" text-anchor="middle" class="t" font-size="17">Async processing</text><text x="510" y="406" text-anchor="middle" class="s">Segmentation</text>
+<rect x="625" y="354" width="170" height="70" class="teal"/><text x="710" y="383" text-anchor="middle" class="t" font-size="17">Event-driven</text><text x="710" y="406" text-anchor="middle" class="s">PE / Pub/Sub / CDC</text>
+<path d="M830 220 H900" class="line" marker-end="url(#a)"/>
+<rect x="905" y="132" width="240" height="180" class="box"/><text x="935" y="171" class="t">Enterprise systems</text><text x="935" y="210" class="s">REST API endpoints</text><text x="935" y="239" class="s">Connected platforms</text><text x="935" y="268" class="s">15K+ API calls/day</text>
+<path d="M610 462 V510" class="dash"/>
+<rect x="235" y="515" width="730" height="100" class="soft"/>
+<text x="270" y="552" class="t">Cross-cutting controls</text>
+<rect x="270" y="570" width="190" height="30" class="pill"/><text x="365" y="591" text-anchor="middle" class="pt">SAML SSO + Shield</text>
+<rect x="485" y="570" width="190" height="30" class="pill"/><text x="580" y="591" text-anchor="middle" class="pt">Sharing + FLS</text>
+<rect x="700" y="570" width="225" height="30" class="pill"/><text x="812" y="591" text-anchor="middle" class="pt">Salesforce DX / Git / Copado</text>
+<text x="54" y="650" class="s" font-size="13">All elements are generalized; no client topology, object model or endpoint details are disclosed.</text></svg>
