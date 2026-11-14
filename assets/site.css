@@ -64,3 +64,9 @@ section{padding:68px 0}.section-kicker{font-size:10px;font-weight:900;letter-spa
 .footer-bottom{border-top:1px solid var(--line);padding-top:15px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px}
 .footer-bottom a{color:#5c708b;text-decoration:none;font-weight:800}
 @media(max-width:700px){.site-footer .wrap{width:calc(100% - 40px)}.footer-layout{grid-template-columns:1fr;gap:22px}.footer-section{gap:10px 16px}}
+
+/* Brand-accurate LinkedIn and phone footer icons */
+.footer-svg{width:19px;height:19px;display:block}
+.phone-svg{color:var(--blue)}
+.linkedin-brand-icon{width:20px;min-width:20px}
+.linkedin-brand-icon .footer-svg{width:20px;height:20px}
