@@ -1,4 +1,6 @@
 (() => {
+  "use strict";
+
   const OWNER = "debarshi-ghosh";
   const REPO = "sfdc-essentials";
   const API_TREE = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/git/trees/main?recursive=1";
@@ -51,16 +53,22 @@
   }
 
   async function renderProjects(grid) {
+    if (grid.dataset.refreshStarted === "true") return;
+    grid.dataset.refreshStarted = "true";
     const status = document.getElementById(grid.dataset.status || "");
     const repositoryUrl = "https://github.com/" + OWNER + "/" + REPO;
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 12000);
+
     try {
       const response = await fetch(API_TREE, {
         headers: { Accept: "application/vnd.github+json" },
-        cache: "no-store"
+        cache: "no-store",
+        signal: controller.signal
       });
       if (!response.ok) throw new Error("GitHub returned HTTP " + response.status);
       const data = await response.json();
-      if (data.truncated) throw new Error("The repository file listing was truncated.");
+      if (data.truncated) throw new Error("GitHub returned a truncated repository listing.");
 
       const folders = [...new Set((data.tree || [])
         .filter(item => item.type === "blob" && /^[^/]+\/sfdx-project\.json$/.test(item.path))
@@ -70,7 +78,7 @@
         const readmeUrl = RAW_BASE + encodeURIComponent(folder) + "/README.md";
         let details = { title: folder, description: "Open the project folder for source code, configuration and implementation guidance." };
         try {
-          const readmeResponse = await fetch(readmeUrl, { cache: "no-store" });
+          const readmeResponse = await fetch(readmeUrl, { cache: "no-store", signal: controller.signal });
           if (readmeResponse.ok) details = readSummary(await readmeResponse.text(), folder);
         } catch (_) {
           // Keep the project visible even if its README cannot be fetched.
@@ -82,7 +90,7 @@
       if (!projects.length) {
         const empty = document.createElement("p");
         empty.className = "note";
-        empty.textContent = "No Salesforce DX projects were detected yet. Add a top-level project folder containing sfdx-project.json to have it listed here.";
+        empty.textContent = "No Salesforce DX projects were detected. Add a top-level project folder containing sfdx-project.json and README.md.";
         grid.appendChild(empty);
       } else {
         projects.forEach(project => {
@@ -97,30 +105,42 @@
           title.textContent = project.title;
           const description = document.createElement("p");
           description.textContent = project.description;
-          const folderUrl = repositoryUrl + "/tree/main/" + encodeURIComponent(project.folder);
-          const readmeUrl = repositoryUrl + "/blob/main/" + encodeURIComponent(project.folder) + "/README.md";
-          body.append(pill, title, description,
-            createLink("Explore source code ↗", folderUrl),
-            createLink("Read setup guide ↗", readmeUrl));
+          const folderPath = project.folder.split("/").map(encodeURIComponent).join("/");
+          body.append(
+            pill,
+            title,
+            description,
+            createLink("Explore source code ↗", repositoryUrl + "/tree/main/" + folderPath),
+            createLink("Read setup guide ↗", repositoryUrl + "/blob/main/" + folderPath + "/README.md")
+          );
           article.appendChild(body);
           grid.appendChild(article);
         });
       }
+
       if (status) {
         status.textContent = projects.length + " Salesforce DX project" + (projects.length === 1 ? "" : "s") +
-          " detected from the repository's main branch. This list refreshes when the page is opened.";
+          " loaded from the repository's main branch.";
       }
     } catch (error) {
-      grid.replaceChildren();
-      const message = document.createElement("p");
-      message.className = "note";
-      message.textContent = "The live project list could not be loaded just now. Browse the public repository directly for the latest source code.";
-      grid.appendChild(message);
-      if (status) status.textContent = error.message;
+      // Intentionally preserve the static cards so the section remains useful offline or during API failures.
+      if (status) {
+        status.textContent = "Showing the available project list. Live refresh was unavailable this time; use the repository link for the latest updates.";
+      }
+      console.warn("SFDC Essentials project refresh failed:", error);
+    } finally {
+      window.clearTimeout(timeoutId);
     }
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function init() {
     document.querySelectorAll("[data-open-source-projects]").forEach(renderProjects);
-  });
+  }
+
+  // This script is loaded at the end of each page. Handle both normal and delayed loading.
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
 })();
