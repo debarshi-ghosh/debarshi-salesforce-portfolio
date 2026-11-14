@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="t d"><title id="t">Service Cloud case handling and omnichannel reference flow</title><desc id="d">Illustrative Service Cloud flow showing email intake to Email-to-Case, case management, Omni-Channel routing, agent handling, Service Agent support and escalation.</desc>
+<defs><style>
+.bg{fill:#f5f8fc}.box{fill:#fff;stroke:#c8d9ec;stroke-width:2;rx:16}.primary{fill:#e8f3ff;stroke:#1479e8;stroke-width:3;rx:18}.dark{fill:#082754}.teal{fill:#e8f8fb;stroke:#4fb8d0;stroke-width:2;rx:14}.soft{fill:#f2f7fc;stroke:#dce7f3;stroke-width:2;rx:14}.t{font:700 20px Arial,sans-serif;fill:#082754}.s{font:15px Arial,sans-serif;fill:#526783}.w{font:700 20px Arial,sans-serif;fill:#fff}.line{stroke:#1479e8;stroke-width:4;fill:none;stroke-linecap:round}.dash{stroke:#7d9ab9;stroke-width:3;stroke-dasharray:8 8;fill:none}.pill{fill:#dff5fa;stroke:#8dd4e3;stroke-width:1.5;rx:10}.pt{font:700 14px Arial,sans-serif;fill:#14607a}
+</style><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#1479e8"/></marker></defs>
+<rect class="bg" width="1200" height="680" rx="24"/>
+<text x="54" y="58" class="t" font-size="28">SERVICE CLOUD | CASE HANDLING + OMNICHANNEL</text>
+<text x="54" y="88" class="s">Illustrative reference workflow built from confirmed capability areas</text>
+<rect x="55" y="175" width="190" height="130" class="box"/><text x="150" y="220" text-anchor="middle" class="t">Customer email</text><text x="150" y="255" text-anchor="middle" class="s">Incoming request</text>
+<path d="M245 240 H315" class="line" marker-end="url(#a)"/>
+<rect x="320" y="175" width="200" height="130" class="primary"/><text x="420" y="220" text-anchor="middle" class="t">Email-to-Case</text><text x="420" y="255" text-anchor="middle" class="s">Case record created</text>
+<path d="M520 240 H585" class="line" marker-end="url(#a)"/>
+<rect x="590" y="175" width="220" height="130" class="primary"/><text x="700" y="220" text-anchor="middle" class="t">Case Management</text><text x="700" y="255" text-anchor="middle" class="s">Categorize / prioritize</text>
+<path d="M810 240 H875" class="line" marker-end="url(#a)"/>
+<rect x="880" y="175" width="265" height="130" class="primary"/><text x="1012" y="220" text-anchor="middle" class="t">Omni-Channel Routing</text><text x="1012" y="255" text-anchor="middle" class="s">Eligible agent / queue</text>
+<path d="M1012 305 V375" class="line" marker-end="url(#a)"/>
+<rect x="780" y="380" width="220" height="115" class="teal"/><text x="890" y="424" text-anchor="middle" class="t">Service Agent</text><text x="890" y="458" text-anchor="middle" class="s">Example assistance</text>
+<rect x="1030" y="380" width="145" height="115" class="box"/><text x="1102" y="424" text-anchor="middle" class="t">Human agent</text><text x="1102" y="458" text-anchor="middle" class="s">Handles case</text>
+<path d="M1000 438 H1025" class="line" marker-end="url(#a)"/>
+<path d="M890 495 V535 H600" class="dash"/>
+<rect x="325" y="535" width="275" height="75" class="soft"/><text x="462" y="565" text-anchor="middle" class="t">Case Escalation</text><text x="462" y="590" text-anchor="middle" class="s">Configured criteria / review</text>
+<path d="M700 305 V535 H605" class="dash"/>
+<rect x="55" y="380" width="220" height="115" class="teal"/><text x="165" y="424" text-anchor="middle" class="t">Auto-Response</text><text x="165" y="458" text-anchor="middle" class="s">Rules / acknowledgement</text>
+<path d="M420 305 V345 H165 V375" class="dash"/>
+<text x="54" y="650" class="s" font-size="13">Illustrative flow only; routing logic, agent actions and SLA settings require project-specific validation.</text></svg>
