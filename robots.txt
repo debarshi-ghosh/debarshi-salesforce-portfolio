@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://debarshi-ghosh.github.io/debarshi-salesforce-portfolio/sitemap.xml
