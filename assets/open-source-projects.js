@@ -1,22 +1,22 @@
 (() => {
   const OWNER = "debarshi-ghosh";
   const REPO = "sfdc-essentials";
-  const API_TREE = `https://api.github.com/repos/${OWNER}/${REPO}/git/trees/main?recursive=1`;
-  const RAW_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/`;
+  const API_TREE = \`https://api.github.com/repos/\${OWNER}/\${REPO}/git/trees/main?recursive=1\`;
+  const RAW_BASE = \`https://raw.githubusercontent.com/\${OWNER}/\${REPO}/main/\`;
 
   function cleanMarkdown(value) {
     return value
-      .replace(/!\\[([^\\]]*)\\]\\([^)]*\\)/g, "$1")
-      .replace(/\\[([^\\]]+)\\]\\([^)]*\\)/g, "$1")
+      .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
       .replace(/<[^>]*>/g, " ")
-      .replace(/[*_~`#>]/g, "")
-      .replace(/\\s+/g, " ")
+      .replace(/[*_~\x60#>]/g, "")
+      .replace(/\s+/g, " ")
       .trim();
   }
 
   function readSummary(markdown, folder) {
-    const lines = markdown.split(/\\r?\\n/);
-    const heading = lines.find(line => /^#\\s+/.test(line));
+    const lines = markdown.split(/\r?\n/);
+    const heading = lines.find(line => /^#\s+/.test(line));
     let paragraph = "";
     if (heading) {
       const start = lines.indexOf(heading) + 1;
@@ -26,7 +26,7 @@
           if (paragraph) break;
           continue;
         }
-        if (/^(#{1,6}\\s|[-*+]\\s|\\d+\\.\\s|!\\[|<|\\|)/.test(line)) {
+        if (/^(#{1,6}\s|[-*+]\s|\d+\.\s|!\[|<|\|)/.test(line)) {
           if (paragraph) break;
           continue;
         }
@@ -35,7 +35,7 @@
       }
     }
     return {
-      title: heading ? cleanMarkdown(heading.replace(/^#\\s+/, "")) : folder,
+      title: heading ? cleanMarkdown(heading.replace(/^#\s+/, "")) : folder,
       description: cleanMarkdown(paragraph) || "Open the project folder for source code, configuration and implementation guidance."
     };
   }
@@ -52,18 +52,18 @@
 
   async function renderProjects(grid) {
     const status = document.getElementById(grid.dataset.status || "");
-    const repositoryUrl = `https://github.com/${OWNER}/${REPO}`;
+    const repositoryUrl = \`https://github.com/\${OWNER}/\${REPO}\`;
     try {
       const response = await fetch(API_TREE, {
         headers: { Accept: "application/vnd.github+json" },
         cache: "no-store"
       });
-      if (!response.ok) throw new Error(`GitHub returned HTTP ${response.status}`);
+      if (!response.ok) throw new Error(\`GitHub returned HTTP \${response.status}\`);
       const data = await response.json();
       if (data.truncated) throw new Error("The repository file listing was truncated.");
 
       const folders = [...new Set((data.tree || [])
-        .filter(item => item.type === "blob" && /^[^/]+\\/sfdx-project\\.json$/.test(item.path))
+        .filter(item => item.type === "blob" && /^[^/]+\/sfdx-project\.json$/.test(item.path))
         .map(item => item.path.split("/")[0]))].sort((a, b) => a.localeCompare(b));
 
       const projects = await Promise.all(folders.map(async folder => {
@@ -107,7 +107,7 @@
         });
       }
       if (status) {
-        status.textContent = `${projects.length} Salesforce DX project${projects.length === 1 ? "" : "s"} detected from the repository's main branch. This list refreshes when the page is opened.`;
+        status.textContent = \`\${projects.length} Salesforce DX project\${projects.length === 1 ? "" : "s"} detected from the repository's main branch. This list refreshes when the page is opened.\`;
       }
     } catch (error) {
       grid.replaceChildren();
