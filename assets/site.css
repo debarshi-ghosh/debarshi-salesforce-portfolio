@@ -46,8 +46,8 @@ section{padding:68px 0}.section-kicker{font-size:10px;font-weight:900;letter-spa
 /* Keep Hire Me navigation label white, including active and hover states */
 .navlinks a.hire-link,.navlinks a.hire-link.active,.navlinks a.hire-link:hover{color:#fff!important}
 
-/* Consistent responsive shared footer */
-.footer-layout{display:grid;grid-template-columns:1.2fr 1.4fr 1fr;gap:34px;padding:8px 0 24px}
+/* Compact shared footer without repeating primary navigation */
+.footer-layout{display:grid;grid-template-columns:1fr auto;align-items:start;gap:34px;padding:8px 0 24px}
 .footer-brand .footer-logo{font-size:17px;font-weight:900;letter-spacing:.4px;color:var(--navy);text-decoration:none}
 .footer-logo span{color:var(--blue)}
 .footer-brand p{margin:8px 0 0;font-size:12px;color:var(--muted)}
@@ -55,8 +55,6 @@ section{padding:68px 0}.section-kicker{font-size:10px;font-weight:900;letter-spa
 .footer-section strong{color:var(--navy);font-size:12px;margin-bottom:3px}
 .footer-section a{color:#5c708b;text-decoration:none;font-size:12px;overflow-wrap:anywhere}
 .footer-section a:hover,.footer-bottom a:hover{color:var(--blue)}
-.footer-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 16px;width:100%}
 .footer-bottom{border-top:1px solid var(--line);padding-top:15px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px}
 .footer-bottom a{color:#5c708b;text-decoration:none;font-weight:800}
-@media(max-width:700px){.footer-layout{grid-template-columns:1fr 1fr;gap:24px}.footer-brand{grid-column:1/-1}.footer-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:420px){.footer-layout{grid-template-columns:1fr}.footer-brand{grid-column:auto}.footer-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.footer-layout{grid-template-columns:1fr;gap:22px}}
