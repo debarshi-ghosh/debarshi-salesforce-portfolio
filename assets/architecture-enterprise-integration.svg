@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="t d"><title id="t">Enterprise Salesforce integration architecture</title><desc id="d">Reference architecture showing Salesforce applications connected through REST and SOAP APIs and event-driven messaging to enterprise systems, supported by idempotency, retries, logging and security.</desc>
+<defs><style>
+.bg{fill:#f5f8fc}.box{fill:#fff;stroke:#c8d9ec;stroke-width:2;rx:16}.primary{fill:#e8f3ff;stroke:#1479e8;stroke-width:3;rx:18}.dark{fill:#082754}.teal{fill:#e8f8fb;stroke:#4fb8d0;stroke-width:2;rx:14}.soft{fill:#f2f7fc;stroke:#dce7f3;stroke-width:2;rx:14}.t{font:700 21px Arial,sans-serif;fill:#082754}.s{font:16px Arial,sans-serif;fill:#526783}.w{font:700 21px Arial,sans-serif;fill:#fff}.line{stroke:#1479e8;stroke-width:4;fill:none;stroke-linecap:round}.dash{stroke:#7d9ab9;stroke-width:3;stroke-dasharray:8 8;fill:none}.pill{fill:#dff5fa;stroke:#8dd4e3;stroke-width:1.5;rx:10}.pt{font:700 14px Arial,sans-serif;fill:#14607a}
+</style><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L0 6 L9 3 z" fill="#1479e8"/></marker></defs>
+<rect class="bg" width="1200" height="680" rx="24"/>
+<text x="54" y="58" class="t" font-size="28">ENTERPRISE SALESFORCE INTEGRATION PATTERN</text>
+<text x="54" y="88" class="s">API-led and event-driven integration reference architecture</text>
+<rect x="55" y="190" width="235" height="220" class="primary"/><rect x="55" y="190" width="235" height="55" class="dark" rx="16"/><text x="172" y="225" text-anchor="middle" class="w">Salesforce</text><text x="85" y="288" class="t">Cloud applications</text><text x="85" y="324" class="s">Apex / LWC / Flows</text><text x="85" y="356" class="s">Business events</text>
+<path d="M290 250 H405" class="line" marker-end="url(#a)"/><path d="M290 350 H405" class="dash"/>
+<rect x="410" y="150" width="380" height="310" class="box"/><text x="600" y="190" text-anchor="middle" class="t">Integration patterns</text>
+<rect x="450" y="220" width="300" height="78" class="teal"/><text x="600" y="250" text-anchor="middle" class="t">Synchronous APIs</text><text x="600" y="276" text-anchor="middle" class="s">REST / SOAP · OAuth</text>
+<rect x="450" y="325" width="300" height="94" class="primary"/><text x="600" y="358" text-anchor="middle" class="t">Event-driven exchange</text><text x="600" y="385" text-anchor="middle" class="s">Platform Events · Pub/Sub · CDC</text>
+<path d="M790 250 H905" class="line" marker-end="url(#a)"/><path d="M790 370 H905" class="line" marker-end="url(#a)"/>
+<rect x="910" y="190" width="235" height="220" class="primary"/><rect x="910" y="190" width="235" height="55" class="dark" rx="16"/><text x="1027" y="225" text-anchor="middle" class="w">Enterprise systems</text><text x="940" y="288" class="t">Connected platforms</text><text x="940" y="324" class="s">Operational systems</text><text x="940" y="356" class="s">External services</text>
+<path d="M600 460 V510" class="dash"/>
+<rect x="140" y="515" width="920" height="105" class="soft"/><text x="180" y="553" class="t">Resilience + security controls</text>
+<rect x="180" y="572" width="165" height="30" class="pill"/><text x="262" y="593" text-anchor="middle" class="pt">Idempotency</text>
+<rect x="365" y="572" width="165" height="30" class="pill"/><text x="447" y="593" text-anchor="middle" class="pt">Retry / errors</text>
+<rect x="550" y="572" width="165" height="30" class="pill"/><text x="632" y="593" text-anchor="middle" class="pt">Structured logs</text>
+<rect x="735" y="572" width="140" height="30" class="pill"/><text x="805" y="593" text-anchor="middle" class="pt">OAuth / SAML</text>
+<rect x="895" y="572" width="135" height="30" class="pill"/><text x="962" y="593" text-anchor="middle" class="pt">Encryption</text>
+<text x="54" y="650" class="s" font-size="13">Pattern diagram only; no middleware vendor, endpoint or client-specific topology is implied.</text></svg>
