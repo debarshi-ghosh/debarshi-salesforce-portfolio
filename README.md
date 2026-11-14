@@ -1,22 +1,26 @@
-# Debarshi Ghosh — Salesforce Portfolio
+# Debarshi Ghosh — Salesforce Technical Lead Portfolio
 
-A responsive, static portfolio website showcasing anonymized Salesforce implementation experience.
+A responsive multi-page static portfolio hosted with GitHub Pages.
 
-## Run locally
-Open `index.html` in a browser. No build step is required.
+## Site structure
+- Home — professional introduction and enterprise delivery impact
+- Projects — anonymized implementation case studies and technical deep-dives
+- Sales Cloud — confirmed manufacturing implementation scope
+- Health & Experience Cloud — global patient support program experience
+- Integration Architecture — REST/SOAP, event-driven integration, Pub/Sub API, CDC and security
+- DevOps & Release Engineering — Salesforce DX, Git, Copado and CI/CD
+- Performance Engineering — LDV, SOQL, Apex/LWC optimization
+- Service Cloud — detail page pending project-specific validation
+- About — professional experience, certifications and awards
+- Expertise — resume-backed technical capability map
+- Hire Me — engagement areas
+- Contact — professional contact details
 
-## Deploy with GitHub Pages
-1. Open **Settings → Pages** in this repository.
-2. Set the source to **GitHub Actions**.
-3. The workflow in `.github/workflows/pages.yml` deploys the site on pushes to `main`.
-
-## Portfolio content
-- Enterprise Sales Cloud implementation — Manufacturing
-- Core Salesforce engineering and technical leadership capabilities
-- Original SVG portfolio media in `assets/`
+## Deployment
+GitHub Pages deploys through `.github/workflows/pages.yml` using GitHub Actions. The site is static HTML and CSS and requires no build step.
 
 ## Confidentiality
-Client names, proprietary materials, production screenshots, and confidential implementation details are excluded. Dashboard visuals use fictional data and are illustrative only.
+Case studies are anonymized. Client names, restricted production screenshots, proprietary architecture and confidential data are not published. Visual assets use illustrative/fictitious data. Project-specific outcomes are attributed to their respective engagement contexts.
 
 ## Contact
 debarshi.ghosh009@gmail.com
