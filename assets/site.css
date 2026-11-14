@@ -33,3 +33,12 @@ section{padding:68px 0}.section-kicker{font-size:10px;font-weight:900;letter-spa
 .download-panel{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
 .download-panel p{margin:4px 0 0;color:var(--muted);font-size:13px}
 @media(max-width:850px){.diagram-grid{grid-template-columns:1fr}}
+
+
+/* Live open-source project library */
+.open-source-project-grid{align-items:stretch}
+.open-source-project-card .project-card-body{gap:8px}
+.open-source-project-card .project-card-body h3{margin:7px 0 0}
+.open-source-project-card .project-card-body p{line-height:1.65}
+.open-source-project-card .card-link{margin-top:5px;padding-top:0}
+.open-source-status{font-size:11px;color:#71839a;margin-top:13px}
