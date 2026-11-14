@@ -70,3 +70,6 @@ section{padding:68px 0}.section-kicker{font-size:10px;font-weight:900;letter-spa
 .phone-svg{color:var(--blue)}
 .linkedin-brand-icon{width:20px;min-width:20px}
 .linkedin-brand-icon .footer-svg{width:20px;height:20px}
+
+/* Match GitHub footer glyph to the portfolio GitHub card icon */
+.footer-section .github-footer-icon{border:0;border-radius:0;width:20px;height:20px;min-width:20px;font-size:24px;line-height:1;font-weight:400;color:#1677ff}
