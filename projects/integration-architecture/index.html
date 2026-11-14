@@ -1,1 +1,76 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Salesforce enterprise integration architecture case study — REST, SOAP, Platform Events, Pub/Sub API, CDC, OAuth and SAML."><meta name="theme-color" content="#082754"><title>Enterprise Integration Architecture | Debarshi Ghosh</title><link rel="stylesheet" href="../../assets/site.css"></head><body><header class="site-header"><div class="wrap nav"><a class="brand" href="../../index.html">DEBARSHI GHOSH<span>.</span></a><nav class="navlinks"><a class=" " href="../../index.html">Home</a><a class="active " href="../../projects/index.html">Projects</a><a class=" " href="../../expertise/index.html">Expertise</a><a class=" " href="../../about/index.html">About</a><a class=" hire-link" href="../../hire-me/index.html">Hire Me</a><a class="" href="../../contact/index.html">Contact</a></nav></div></header><main><section class="page-hero"><div class="wrap"><div class="breadcrumb"><a href="../../index.html">Home</a> / Enterprise Salesforce Integration Architecture</div><div class="section-kicker">Technical deep-dive · Architecture</div><h1>Enterprise Salesforce Integration Architecture</h1><p>Designing resilient, secure and observable integration patterns across enterprise Salesforce environments.</p></div></section><section><div class="wrap detail-layout"><article class="detail-main"><h2>Integration approach</h2><p>Designed and delivered enterprise integration patterns across manufacturing and patient-support program environments. The work covered synchronous APIs, event-driven synchronization, secure identity, error handling and operational resilience.</p><h3>Manufacturing Cloud integration</h3><ul><li>Designed REST integrations processing 15,000+ API transactions per day.</li><li>Introduced idempotency, structured logging, retry and error-handling strategies.</li><li>Reduced integration failures by 30% through resilient integration design.</li><li>Implemented event-driven synchronization using Platform Events, Pub/Sub API and Change Data Capture.</li></ul><h3>Health and Experience Cloud integration</h3><ul><li>Designed secure REST/SOAP API integrations processing 10,000+ daily transactions.</li><li>Supported Identity and Consent Management architecture.</li><li>Reduced integration discrepancies by 40% while supporting privacy-aware data handling.</li></ul><h3>Security and identity</h3><ul><li>OAuth 2.0 and SAML Single Sign-On patterns.</li><li>Salesforce Shield Encryption and secure API/Apex design.</li><li>Sharing Rules, Sharing Sets, Role Hierarchy, Field-Level Security and Permission Sets.</li><li>Access control, consent management and data governance.</li></ul><h3>Architecture patterns</h3><div class="tag-list"><span class="tag">REST / SOAP</span><span class="tag">Platform Events</span><span class="tag">Pub/Sub API</span><span class="tag">CDC</span><span class="tag">OAuth 2.0</span><span class="tag">SAML SSO</span><span class="tag">Idempotency</span><span class="tag">Retry / Error Handling</span><span class="tag">Structured Logging</span><span class="tag">Event-Driven Design</span><span class="tag">Service-Layer Architecture</span><span class="tag">Shield Encryption</span></div><p class="note">The transaction volumes and outcome metrics above relate to separate engagements and are deliberately shown separately.</p></article><aside class="detail-side"><h3>Integration profile</h3><p><strong>API volume</strong><br>15,000+ / day (Manufacturing)</p><p><strong>API volume</strong><br>10,000+ / day (Patient Support)</p><p><strong>Resilience</strong><br>Idempotency, logging, retry and structured error handling</p><p><strong>Eventing</strong><br>Platform Events, Pub/Sub API and CDC</p><p><a class="btn btn-blue" href="../index.html">Back to projects</a></p></aside></div></section></main><footer class="site-footer"><div class="wrap footer-row"><span>© 2026 Debarshi Ghosh · Salesforce Technical Lead Portfolio</span><div class="footer-links"><a href="../../projects/index.html">Projects</a><a href="../../about/index.html">About</a><a href="../../contact/index.html">Contact</a><a href="https://github.com/debarshi-ghosh/debarshi-salesforce-portfolio">GitHub</a></div><div class="footer-social"><a href="tel:+917076652995">☎ +91 7076652995</a><a href="mailto:debarshi.ghosh009@gmail.com">✉ Email</a><a href="https://www.linkedin.com/in/debarshi-ghosh1995" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://www.salesforce.com/trailblazer/dghosh5" target="_blank" rel="noopener noreferrer">Trailblazer ↗</a></div></div></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Salesforce enterprise integration architecture case study — REST, SOAP, Platform Events, Pub/Sub API, CDC, OAuth and SAML."><meta name="theme-color" content="#082754"><title>Enterprise Integration Architecture | Debarshi Ghosh</title><link rel="stylesheet" href="../../assets/site.css"></head><body><header class="site-header"><div class="wrap nav"><a class="brand" href="../../index.html">DEBARSHI GHOSH<span>.</span></a><nav class="navlinks"><a class=" " href="../../index.html">Home</a><a class="active " href="../../projects/index.html">Projects</a><a class=" " href="../../expertise/index.html">Expertise</a><a class=" " href="../../about/index.html">About</a><a class=" hire-link" href="../../hire-me/index.html">Hire Me</a><a class="" href="../../contact/index.html">Contact</a></nav></div></header><main>
+<section class="page-hero"><div class="wrap">
+<div class="breadcrumb"><a href="../../index.html">Home</a> / Enterprise Salesforce Integration Architecture</div>
+<div class="section-kicker">Technical deep-dive · Architecture</div>
+<h1>Enterprise Salesforce Integration Architecture</h1>
+<p>Building secure, resilient integration patterns for enterprise Salesforce environments—from high-volume manufacturing transactions to privacy-aware patient-support data exchange.</p>
+</div></section>
+<section><div class="wrap detail-layout">
+<article class="detail-main">
+<h2>Business challenge</h2>
+<p>Enterprise Salesforce platforms rarely operate in isolation. Business processes depend on customer, operational and program information moving between Salesforce and connected enterprise systems. The integration work documented across my manufacturing and patient-support engagements points to a common set of needs: exchange data reliably at scale, keep connected records aligned, protect sensitive information, and make failures easier to detect and recover from.</p>
+<p>In the manufacturing environment, the platform needed to handle a high daily volume of API transactions while supporting reliable synchronization and controlled retry behaviour. In the patient-support environment, integrations needed to support Identity and Consent Management and privacy-aware handling of sensitive information, while reducing discrepancies across connected systems.</p>
+<p class="note">These business challenges are inferred from the integration scope and outcomes documented in the resume. The exact client system landscape, middleware products, interface inventory and original baseline were not specified and are intentionally not invented here.</p>
+
+<h2>Architecture approach</h2>
+<p>Applied a combination of API-led and event-driven integration patterns, selecting the approach based on the interaction need. REST/SOAP APIs supported request-response exchange, while Platform Events, Pub/Sub API and Change Data Capture supported event-driven synchronization where applicable. Resilience and security were treated as part of the integration design rather than as afterthoughts.</p>
+
+<h3>Manufacturing Cloud — high-volume, resilient integration</h3>
+<p><strong>Integration need:</strong> Support a busy manufacturing platform with dependable REST communication and synchronization across connected enterprise systems.</p>
+<ul>
+<li>Designed REST integrations processing <strong>15,000+ API transactions per day</strong>.</li>
+<li>Applied idempotency practices to make repeat processing safer and reduce duplicate side effects.</li>
+<li>Introduced structured logging, retry strategies and error-handling patterns to improve operational visibility and recovery.</li>
+<li>Implemented event-driven synchronization using Platform Events, Pub/Sub API and Change Data Capture (CDC).</li>
+<li>Reduced integration failures by <strong>30%</strong> through resilient integration design.</li>
+</ul>
+
+<h3>Health & Experience Cloud — secure program data exchange</h3>
+<p><strong>Integration need:</strong> Support global Patient Support Programs with reliable data exchange and identity/consent-aware handling of sensitive information.</p>
+<ul>
+<li>Designed secure REST/SOAP API integrations processing <strong>10,000+ daily transactions</strong>.</li>
+<li>Supported Identity and Consent Management architecture.</li>
+<li>Applied secure authentication, authorization, encryption and API practices alongside controlled Salesforce data access.</li>
+<li>Reduced integration discrepancies by <strong>40%</strong> while supporting privacy-aware data handling.</li>
+</ul>
+
+<h2>Cross-cutting security and identity</h2>
+<ul>
+<li><strong>Manufacturing environment:</strong> Implemented SAML Single Sign-On for 1,200+ users, reducing authentication-related support tickets by 60%. Applied Salesforce Shield Encryption and access controls using Sharing Rules, Sharing Sets, Role Hierarchy, Field-Level Security and Permission Sets.</li>
+<li><strong>Patient-support environment:</strong> Designed Identity and Consent Management architecture and implemented controlled data access through Sharing Rules, Sharing Sets, Field-Level Security and Permission Sets, with secure authentication, authorization and encryption practices.</li>
+</ul>
+
+<h2>Design principles applied</h2>
+<div class="tag-list">
+<span class="tag">API-led Integration</span><span class="tag">REST / SOAP</span><span class="tag">Event-Driven Design</span><span class="tag">Platform Events</span><span class="tag">Pub/Sub API</span><span class="tag">Change Data Capture</span><span class="tag">Idempotency</span><span class="tag">Retry Strategy</span><span class="tag">Structured Logging</span><span class="tag">Error Handling</span><span class="tag">OAuth 2.0</span><span class="tag">SAML SSO</span><span class="tag">Shield Encryption</span><span class="tag">Consent Management</span><span class="tag">Access Governance</span>
+</div>
+
+<h2>My contribution</h2>
+<p>Across the two engagements, contributions included integration architecture and design, API and event-driven integration implementation, security and access-control design, technical walkthroughs, code and architecture reviews, root-cause analysis and collaboration with engineering, QA, DevOps and business stakeholders.</p>
+<p>In the manufacturing engagement, this work formed part of my Technical Lead responsibilities, including end-to-end architecture and technical delivery. In the patient-support program, it formed part of my Health Cloud and Experience Cloud implementation and technical delivery responsibilities.</p>
+
+<h2>Measured outcomes</h2>
+<div class="metric-grid">
+<div class="metric"><strong>15,000+</strong><p>Daily REST API transactions · Manufacturing</p></div>
+<div class="metric"><strong>30%</strong><p>Fewer integration failures · Manufacturing</p></div>
+<div class="metric"><strong>10,000+</strong><p>Daily REST/SOAP transactions · Patient Support</p></div>
+<div class="metric"><strong>40%</strong><p>Fewer integration discrepancies · Patient Support</p></div>
+<div class="metric"><strong>1,200+</strong><p>Users supported through SAML SSO · Manufacturing</p></div>
+<div class="metric"><strong>60%</strong><p>Fewer authentication-related support tickets · Manufacturing</p></div>
+</div>
+<p class="note">All figures are attributed to their respective engagements as described in the resume. They should not be read as results from one combined integration program.</p>
+</article>
+
+<aside class="detail-side">
+<h3>Integration profile</h3>
+<p><strong>Manufacturing</strong><br>15,000+ REST API transactions/day</p>
+<p><strong>Patient Support</strong><br>10,000+ REST/SOAP transactions/day</p>
+<p><strong>Resilience</strong><br>Idempotency, structured logging, retry and error handling</p>
+<p><strong>Eventing</strong><br>Platform Events, Pub/Sub API and CDC</p>
+<p><strong>Security</strong><br>OAuth 2.0, SAML SSO, Shield Encryption, consent and access controls</p>
+<h3>Core capabilities</h3>
+<div class="tag-list"><span class="tag">Integration Architecture</span><span class="tag">Enterprise APIs</span><span class="tag">Event-Driven Systems</span><span class="tag">Secure Identity</span><span class="tag">Operational Resilience</span></div>
+<p style="margin-top:20px"><a class="btn btn-blue" href="../index.html">Back to projects</a></p>
+</aside>
+</div></section>
+</main><footer class="site-footer"><div class="wrap footer-row"><span>© 2026 Debarshi Ghosh · Salesforce Technical Lead Portfolio</span><div class="footer-links"><a href="../../projects/index.html">Projects</a><a href="../../about/index.html">About</a><a href="../../contact/index.html">Contact</a><a href="https://github.com/debarshi-ghosh/debarshi-salesforce-portfolio">GitHub</a></div><div class="footer-social"><a href="tel:+917076652995">☎ +91 7076652995</a><a href="mailto:debarshi.ghosh009@gmail.com">✉ Email</a><a href="https://www.linkedin.com/in/debarshi-ghosh1995" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://www.salesforce.com/trailblazer/dghosh5" target="_blank" rel="noopener noreferrer">Trailblazer ↗</a></div></div></footer></body></html>
