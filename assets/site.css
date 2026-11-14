@@ -46,21 +46,21 @@ section{padding:68px 0}.section-kicker{font-size:10px;font-weight:900;letter-spa
 /* Keep Hire Me navigation label white, including active and hover states */
 .navlinks a.hire-link,.navlinks a.hire-link.active,.navlinks a.hire-link:hover{color:#fff!important}
 
-/* Single-column footer: identity first, contact links in a horizontal row beneath */
+/* Balanced two-column footer; contact links arranged horizontally */
 .site-footer .wrap{max-width:1100px;margin-left:auto;margin-right:auto}
-.footer-layout{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:8px 0 24px}
+.footer-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,420px);align-items:start;gap:48px;padding:8px 0 24px}
 .footer-brand .footer-logo{font-size:17px;font-weight:900;letter-spacing:.4px;color:var(--navy);text-decoration:none}
 .footer-logo span{color:var(--blue)}
 .footer-brand p{margin:8px 0 0;font-size:12px;color:var(--muted)}
-.footer-section{display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:18px 24px}
+.footer-section{display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:12px 18px}
 .footer-section strong{flex-basis:100%;margin-bottom:0}
 .footer-section strong{color:var(--navy);font-size:12px;margin-bottom:3px}
 .footer-section a{color:#5c708b;text-decoration:none;font-size:12px;overflow-wrap:anywhere}
 .footer-section .footer-contact-link{display:flex;align-items:center;gap:8px;min-height:24px}
-.footer-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;min-width:18px;color:var(--blue);font-size:16px;font-weight:700}
-.footer-social-icon{font-size:12px;border:1px solid currentColor;border-radius:3px;height:15px;width:15px;min-width:15px;line-height:1}
+.footer-icon{display:inline-flex;align-items:center;justify-content:center;width:20px;min-width:20px;color:var(--blue);font-size:17px;font-weight:700}
+.footer-social-icon{font-family:Arial,sans-serif;font-size:14px;font-weight:900;border:2px solid currentColor;border-radius:3px;height:17px;width:17px;min-width:17px;line-height:14px}
 .footer-external{font-size:11px;margin-left:2px}
 .footer-section a:hover,.footer-bottom a:hover{color:var(--blue)}
 .footer-bottom{border-top:1px solid var(--line);padding-top:15px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px}
 .footer-bottom a{color:#5c708b;text-decoration:none;font-weight:800}
-@media(max-width:700px){.site-footer .wrap{width:calc(100% - 40px)}.footer-layout{gap:14px}.footer-section{gap:10px 18px}}
+@media(max-width:700px){.site-footer .wrap{width:calc(100% - 40px)}.footer-layout{grid-template-columns:1fr;gap:22px}.footer-section{gap:10px 16px}}
