@@ -21,11 +21,13 @@ footer{padding:27px 0;border-top:1px solid var(--line);color:#75849a;font-size:1
 
 .expertise-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.expertise-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 7px 25px #0e376b08}.expertise-icon{width:39px;height:39px;display:grid;place-items:center;border-radius:11px;background:#e2f1ff;color:var(--blue);font-size:20px;font-weight:800;margin-bottom:12px}.expertise-card h3{color:var(--navy);margin:0;font-size:16px}.expertise-card>p{color:var(--muted);font-size:12px;margin:2px 0 14px}.expertise-card .skill-wrap{gap:7px}.expertise-card .chip{font-size:11px;padding:6px 9px}.cert-panel{margin-top:20px;padding:24px 26px;background:#fff;border:1px solid var(--line);border-radius:16px;display:grid;grid-template-columns:.7fr 1.3fr;gap:25px;align-items:center}.cert-panel h3{color:var(--navy);margin:5px 0;font-size:19px}.cert-panel p{margin:0;color:var(--muted);font-size:12px}.cert-list{display:flex;gap:9px;flex-wrap:wrap}.cert{display:inline-block;padding:8px 11px;border-radius:8px;background:#edf6ff;border:1px solid #d5e8fa;color:#24527c;font-size:11px;font-weight:800}.cert-progress{background:#fff6e8;border-color:#f1ddb8;color:#8b5a12}
 .expertise-grid{grid-template-columns:repeat(2,1fr)}@media(max-width:800px){.cert-panel{grid-template-columns:1fr}}.hero-grid{grid-template-columns:1fr}.hero-art{max-width:600px}.trust-row{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr}.project-body{grid-template-columns:1fr}.project-top{display:block}.role{display:inline-block;margin-top:15px}.callout{display:block}.callout .btn{margin-top:20px}}
-@media(max-width:560px){.nav{height:auto;padding:15px 0;align-items:flex-start}.navin{align-items:flex-start;flex-direction:column;gap:12px}nav{gap:16px;flex-wrap:wrap}.hero{padding:58px 0}.hero h1{letter-spacing:-1.8px}.trust-row{grid-template-columns:1fr 1fr}.section{padding:58px 0}.project-top,.project-body{padding:23px}.media-grid{padding:0 23px 23px;grid-template-columns:1fr}.callout{padding:28px}}
+@media(max-width:560px){.impact-grid{grid-template-columns:1fr}.impact-support{padding:22px}.impact-points{grid-template-columns:1fr}.nav{height:auto;padding:15px 0;align-items:flex-start}.navin{align-items:flex-start;flex-direction:column;gap:12px}nav{gap:16px;flex-wrap:wrap}.hero{padding:58px 0}.hero h1{letter-spacing:-1.8px}.trust-row{grid-template-columns:1fr 1fr}.section{padding:58px 0}.project-top,.project-body{padding:23px}.media-grid{padding:0 23px 23px;grid-template-columns:1fr}.callout{padding:28px}}
+
+.impact-section{background:#fff}.impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.impact-card{background:linear-gradient(145deg,#f7fbff,#edf6ff);border:1px solid #dceafa;border-radius:15px;padding:22px}.impact-value{font-size:42px;line-height:1;font-weight:900;letter-spacing:-1.8px;color:#0a4d9a}.impact-value span{font-size:25px;color:#1684dc}.impact-card h3{font-size:14px;color:var(--navy);margin:12px 0 5px}.impact-card p{font-size:12px;color:var(--muted);margin:0}.impact-support{margin-top:18px;background:#092b62;border-radius:17px;padding:25px 27px;display:grid;grid-template-columns:.8fr 1.2fr;gap:25px;align-items:center}.impact-support .section-kicker{color:#8fdcff}.impact-support h3{color:#fff;margin:7px 0 0;font-size:19px;line-height:1.3}.impact-points{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.impact-points>div{display:flex;align-items:center;gap:10px}.impact-points strong{font-size:23px;color:#83dcff;min-width:48px}.impact-points span{color:#d4e5f8;font-size:11px;line-height:1.35}.impact-note{font-size:11px;color:#72839a;margin:15px 0 0}
 </style>
 </head>
 <body>
-<header><div class="wrap nav navin"><a class="brand" href="#">DEBARSHI GHOSH<b>.</b></a><nav><a href="#about">About</a><a href="#expertise">Expertise</a><a href="#work">Selected work</a><a href="#contact">Contact</a></nav></div></header>
+<header><div class="wrap nav navin"><a class="brand" href="#">DEBARSHI GHOSH<b>.</b></a><nav><a href="#about">About</a><a href="#impact">Delivery impact</a><a href="#expertise">Expertise</a><a href="#work">Selected work</a><a href="#contact">Contact</a></nav></div></header>
 <main>
 <section class="hero"><div class="wrap hero-grid">
 <div><div class="eyebrow"><span class="dot"></span> Salesforce Technical Lead · India · Remote</div>
@@ -37,6 +39,27 @@ footer{padding:27px 0;border-top:1px solid var(--line);color:#75849a;font-size:1
 <div class="trust"><div class="wrap trust-row"><div class="trust-item"><i>✦</i> Enterprise CRM delivery</div><div class="trust-item"><i>⌘</i> Hands-on development</div><div class="trust-item"><i>⌁</i> Integration & architecture</div><div class="trust-item"><i>◎</i> Technical leadership</div></div></div>
 <section id="about"><div class="wrap"><div class="section-kicker">About</div><h2 class="section-title">From solution design to production delivery.</h2><p class="section-lead">I combine architecture-level thinking with practical engineering—turning business requirements into secure, maintainable Salesforce solutions. My work spans implementation, enhancement, integration, performance and release delivery.</p>
 <div class="grid3"><article class="card"><div class="card-icon">⌘</div><h3>Solution architecture</h3><p>Technical design, data modeling, security, integration patterns, scalability and governor-limit-aware engineering.</p></article><article class="card"><div class="card-icon">⌁</div><h3>Hands-on development</h3><p>Apex, Lightning Web Components, asynchronous processing, SOQL/SOSL and declarative automation.</p></article><article class="card"><div class="card-icon">◇</div><h3>Technical leadership</h3><p>Design reviews, code quality, mentoring, engineering standards, deployment coordination and delivery ownership.</p></article></div>
+</div></section>
+<section id="impact" class="impact-section"><div class="wrap">
+<div class="section-kicker">Enterprise delivery impact</div>
+<h2 class="section-title">Scale, reliability and delivery outcomes.</h2>
+<p class="section-lead">Selected measurable outcomes from separate enterprise engagements across Manufacturing, Health and Experience Cloud. These figures describe different programs and should not be interpreted as results from one project.</p>
+<div class="impact-grid">
+<article class="impact-card"><div class="impact-value">1,500<span>+</span></div><h3>Users supported</h3><p>Across enterprise Salesforce platforms and global patient support programs.</p></article>
+<article class="impact-card"><div class="impact-value">2M<span>+</span></div><h3>Records managed</h3><p>Large-scale Manufacturing Cloud warranty management environment.</p></article>
+<article class="impact-card"><div class="impact-value">15K<span>+</span></div><h3>API transactions / day</h3><p>Resilient enterprise REST integrations with structured logging, retries and idempotency.</p></article>
+<article class="impact-card"><div class="impact-value">35<span>%</span></div><h3>Processing efficiency improvement</h3><p>Through scalable Apex, LWC, automation and transaction design.</p></article>
+<article class="impact-card"><div class="impact-value">40<span>%</span></div><h3>Fewer production defects</h3><p>Contributed through architecture, code and configuration reviews and engineering governance.</p></article>
+<article class="impact-card"><div class="impact-value">25<span>%</span></div><h3>Faster release cycles</h3><p>Through Salesforce DX, Git, Copado, CI/CD governance and automated quality gates.</p></article>
+</div>
+<div class="impact-support"><div><div class="section-kicker">Additional delivery highlights</div><h3>Improvements across integration, identity and global release delivery</h3></div><div class="impact-points">
+<div><strong>30%</strong><span>Reduction in integration failures</span></div>
+<div><strong>60%</strong><span>Fewer authentication-related support tickets</span></div>
+<div><strong>12+</strong><span>Major releases delivered</span></div>
+<div><strong>30+</strong><span>Country rollouts supported</span></div>
+<div><strong>0</strong><span>Sev-1 defects across stated release program</span></div>
+</div></div>
+<p class="impact-note">Metrics are taken from my professional experience summary and project records. Outcomes are presented at an aggregate career level; individual results relate to their respective engagements.</p>
 </div></section>
 <section class="skills" id="expertise"><div class="wrap">
 <div class="section-kicker">Technical expertise</div>
