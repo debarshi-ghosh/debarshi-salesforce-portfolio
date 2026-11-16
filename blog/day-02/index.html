@@ -56,8 +56,47 @@
 <h3>Where do Flow and Apex fit?</h3>
 <ul><li><strong>Before-save Flow:</strong> runs before before-triggers; ideal for same-record field updates.</li><li><strong>Before trigger:</strong> modify <code>Trigger.new</code> directly; no extra DML is needed.</li><li><strong>After trigger:</strong> use when you need record IDs or related-record work; the triggering record is read-only.</li><li><strong>After-save Flow:</strong> use for related-record updates and actions.</li><li><strong>Workflow field update:</strong> can cause before/after update triggers to execute again; design for recursion safety and idempotency.</li></ul>
 <div class="callout"><strong>Practical tip:</strong> A before-save Flow runs before a before trigger, so the trigger can see the Flow's field changes. Avoid implementing the same rule in both places unless intentional.</div>
-<p><strong>Memory aid:</strong> Before-save Flow → Before trigger → validation → save → After trigger → automation → commit → post-commit.</p><h2>8. What this means for Salesforce developers</h2><ul><li><strong>Build for shared resources:</strong> bulkify operations and design efficient queries.</li><li><strong>Use platform abstractions:</strong> work through supported APIs and metadata rather than assuming direct infrastructure access.</li><li><strong>Version metadata:</strong> keep configuration and code in source control.</li><li><strong>Design security deliberately:</strong> consider org permissions, record sharing and application access separately.</li><li><strong>Think transactionally:</strong> understand what runs during save, what can fail and what rolls back.</li><li><strong>Test at realistic scale:</strong> single-record success is not enough to prove bulk behavior.</li></ul>
-<h2>9. Quick knowledge check</h2><ol><li>What is shared in a multi-tenant platform, and what remains tenant-specific?</li><li>How is metadata different from business data?</li><li>Why do governor limits exist?</li><li>Why is record sharing not the same as object and field permissions?</li><li>What kinds of platform behavior might run during a record save?</li></ol>
+<p><strong>Memory aid:</strong> Before-save Flow → Before trigger → validation → save → After trigger → automation → commit → post-commit.</p><h2>8. Salesforce Platform Architecture Layers</h2>
+<p>A useful mental model is to think in layers. This is a conceptual view for learning—not Salesforce's internal physical deployment blueprint.</p>
+<pre><code>Experience Layer
+  Lightning Experience · Mobile · Experience Cloud · APIs
+                    ↓
+Application Layer
+  Standard apps · Custom apps · Objects · UI components
+                    ↓
+Platform Services
+  Identity & security · Metadata · Automation
+  Apex runtime · Query/DML · Events · APIs
+                    ↓
+Shared Infrastructure
+  Compute · Storage · Networking · Operations</code></pre>
+<ul><li><strong>Experience:</strong> the channels through which users and systems interact.</li><li><strong>Application:</strong> standard and custom capabilities built from Salesforce metadata.</li><li><strong>Platform services:</strong> reusable services that execute application behavior and enforce platform rules.</li><li><strong>Infrastructure:</strong> the managed resources underneath the platform, abstracted from most customers.</li></ul>
+<p>These layers are connected: a Lightning page invokes platform services; those services interpret metadata, enforce access, execute automation and interact with data services.</p>
+<h2>9. Transaction Architecture: Commit, Rollback and Atomicity</h2>
+<p>A Salesforce transaction groups related work into a unit of execution. In a typical synchronous transaction, successful work commits together. If an unhandled exception causes the transaction to fail, database changes in that transaction are rolled back.</p>
+<h3>Important concepts</h3><ul><li><strong>Atomicity:</strong> database changes in a transaction succeed or fail together, subject to the behavior of the operation and API.</li><li><strong>Rollback:</strong> undo database changes made in the transaction when it fails.</li><li><strong>Savepoint:</strong> mark a point in a transaction to which code can roll back intentionally.</li><li><strong>Partial-success DML:</strong> methods such as <code>Database.insert(records, false)</code> can allow successful rows to be processed while returning errors for failed rows; this is not the same as all-or-none DML.</li><li><strong>Post-commit work:</strong> certain actions execute after the database transaction commits; they are not simply part of the same rollback boundary.</li></ul>
+<pre><code>Request
+  ↓
+Synchronous transaction
+  ├─ Apex / Flow / validations / DML
+  ├─ Success → Commit
+  └─ Unhandled failure → Rollback
+                         ↓
+                  Caller gets result/error
+  ↓ (after successful commit)
+Post-commit work / async processing</code></pre>
+<div class="callout"><strong>Developer implication:</strong> Understand which operations share a transaction, how exceptions are handled, and whether a process is synchronous or asynchronous. Do not assume an external system's side effects can be rolled back by Salesforce.</div>
+<h2>10. Platform APIs and Metadata Lifecycle</h2>
+<p>Salesforce exposes supported APIs for different jobs. Choosing the right API is part of architecture, not just implementation detail.</p>
+<ul><li><strong>REST API:</strong> resource-oriented access to records and platform capabilities; commonly used by web and integration clients.</li><li><strong>SOAP API:</strong> contract-based API for enterprise integrations and clients that use SOAP.</li><li><strong>Bulk API:</strong> asynchronous processing designed for large data volumes.</li><li><strong>Metadata API:</strong> retrieve, deploy and manage supported configuration and metadata.</li><li><strong>Tooling API:</strong> developer-oriented access to metadata and tooling resources.</li></ul>
+<p>For metadata lifecycle, teams commonly retrieve source, track changes in version control, validate deployments, and deploy metadata between environments using Salesforce CLI and supported deployment APIs. A deployment moves metadata—not ordinary business records—and dependencies and environment-specific settings need attention.</p>
+<div class="callout"><strong>Remember:</strong> Data migration and metadata deployment are different workstreams. Plan them separately, even when they are coordinated in one release.</div>
+<h2>11. Real-world walkthrough: creating an object and inserting a record</h2>
+<ol><li>A developer creates a custom object and fields. Salesforce stores these definitions as metadata.</li><li>The metadata is deployed to a target org through a supported deployment workflow.</li><li>A user or integration creates a record through the UI, Apex or API.</li><li>Salesforce applies relevant access checks and executes the applicable save sequence—including automation and validation.</li><li>The transaction commits if it succeeds; otherwise, the relevant database work may roll back.</li><li>After commit, eligible asynchronous or post-commit actions can proceed.</li></ol>
+<p>This example connects metadata, runtime behavior, security, transaction processing and automation into one end-to-end picture.</p>
+<h2>12. What this means for Salesforce developers</h2><ul><li><strong>Build for shared resources:</strong> bulkify operations and design efficient queries.</li><li><strong>Use platform abstractions:</strong> work through supported APIs and metadata rather than assuming direct infrastructure access.</li><li><strong>Version metadata:</strong> keep configuration and code in source control.</li><li><strong>Design security deliberately:</strong> consider org permissions, record sharing and application access separately.</li><li><strong>Think transactionally:</strong> understand what runs during save, what can fail and what rolls back.</li><li><strong>Choose APIs intentionally:</strong> match synchronous, asynchronous, data and metadata needs to the API.</li><li><strong>Test at realistic scale:</strong> single-record success is not enough to prove bulk behavior.</li></ul>
+<h2>13. Architecture interview questions</h2><ol><li>Why does Salesforce use a multi-tenant architecture, and what does it mean for developers?</li><li>How are metadata and business data different? Give examples of each.</li><li>Why do governor limits exist, and how do they influence solution design?</li><li>Explain the difference between a Salesforce transaction and post-commit processing.</li><li>What is the difference between all-or-none DML and partial-success DML?</li><li>When would you choose REST API versus Bulk API?</li><li>How would you move custom object definitions between orgs?</li><li>Why is record sharing not sufficient to enforce object and field permissions?</li><li>How can workflow field updates affect trigger execution?</li><li>What architectural considerations would you make for a high-volume integration?</li></ol>
+<h2>14. Quick knowledge check</h2><ol><li>What is shared in a multi-tenant platform, and what remains tenant-specific?</li><li>How is metadata different from business data?</li><li>Why do governor limits exist?</li><li>Why is record sharing not the same as object and field permissions?</li><li>What kinds of platform behavior might run during a record save?</li></ol>
 <h2>Key takeaway</h2><p>Salesforce is a shared, metadata-driven platform that abstracts infrastructure while enforcing tenant isolation and resource governance. Once you understand this foundation, data modeling, security, automation and Apex design decisions become much easier to reason about.</p>
 <div class="article-nav"><a href="../day-01/index.html">← Day 1: Developer Roadmap</a><span>Day 3 — Coming soon</span></div>
 </article></main><div id="shared-footer"></div><script src="../../assets/js/layout.js"></script></body></html>
