@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A practical Salesforce Flow vs Apex guide covering Screen Flows, record-triggered automation, Apex triggers, Invocable Apex, automation density, performance, maintainability and architecture decisions."><title>Day 5 — Salesforce Flow vs Apex | Debarshi Ghosh</title><link rel="stylesheet" href="../../assets/site.css"><style>
+.article-hero{padding:58px 0;background:#f1f6fd;border-bottom:1px solid #dbe7f5}.article-wrap{max-width:820px;margin:auto}.article-hero h1{font-size:clamp(2.2rem,5vw,3.5rem);line-height:1.13;margin:18px 0}.article-hero p{font-size:1.12rem;color:#53657c;line-height:1.75}.blog-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px}.blog-meta span{display:inline-block;line-height:1.5}.article-label{color:#2563eb;font-weight:800;letter-spacing:.12em;font-size:.8rem}.article-content{max-width:820px;margin:auto;padding:44px 22px 70px;line-height:1.85;color:#26364a}.article-content h2{font-size:1.8rem;line-height:1.3;margin:42px 0 14px;color:#0b2447}.article-content h3{font-size:1.2rem;margin:25px 0 8px;color:#163b70}.article-content p{margin:14px 0}.article-content ul,.article-content ol{padding-left:24px}.article-content li{margin:8px 0}.article-content a{color:#1459a6}.article-content pre{background:#0b1730;color:#e5efff;border-radius:12px;padding:18px;overflow:auto;font-size:.9rem}.article-content code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.article-content :not(pre)>code{background:#eaf1fb;padding:2px 5px;border-radius:4px}.callout{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:8px;margin:22px 0}.article-nav{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #dbe5f1;padding-top:24px;margin-top:48px}.article-content table{border-collapse:collapse;width:100%;margin:20px 0;font-size:.95rem}.article-content th,.article-content td{border:1px solid #dbe5f1;padding:10px;text-align:left;vertical-align:top}.article-content th{background:#eff6ff;color:#0b2447}
+</style></head><body><div id="shared-header"></div>
+<main><section class="article-hero"><div class="wrap article-wrap"><div class="article-label">SALESFORCE ENGINEERING JOURNEY · DAY 05</div><h1>Salesforce Flow vs Apex: Choosing the Right Automation Tool</h1><p>A practical, architecture-first guide to selecting declarative automation, programmatic logic or a hybrid approach—based on complexity, automation density, performance and long-term maintainability.</p><div class="blog-meta"><span>Intermediate</span><span>16–20 min read</span><span>Updated: November 2026</span></div></div></section>
+<article class="article-content">
+<p>One of the most common design decisions in Salesforce development is whether a requirement should be implemented using Flow or Apex.</p>
+<p>For example, when an Opportunity is marked Closed Won, the business may want to create an onboarding task, update a related Account, notify an operations team and create a downstream service record. All of this might be possible with Flow. But if the process grows to include complex calculations, large data volumes, sophisticated deduplication, reusable domain logic and intricate transaction handling, Apex may be the better foundation.</p>
+<p>The right question is not simply, “Can Flow do this?” or “Can Apex do this?” Both tools can query records, apply conditions and perform data operations. The real question is: which design will be easiest to understand, govern, test, operate and scale over time?</p>
+<div class="callout"><strong>Core principle:</strong> Choose the simplest tool that meets the functional and non-functional requirements. For record-triggered automation, assess automation density—not just the preference or skill set of the person building it.</div>
+<h2>1. Understand the tools</h2>
+<h3>What is Salesforce Flow?</h3>
+<p>Flow is Salesforce's declarative automation and process-building tool. It lets admins and developers build logic visually in Flow Builder using elements, resources, decisions and connectors, with no Apex required for many common use cases.</p>
+<p>Common Flow types include:</p>
+<ul><li><strong>Screen Flow:</strong> guides a user through an interactive process, collects input and performs actions. It can be launched from record pages, actions, buttons, utility bars and other supported entry points.</li><li><strong>Record-Triggered Flow:</strong> starts when a record is created, updated or deleted, depending on supported configuration. It is used for before-save updates, after-save actions and scheduled paths.</li><li><strong>Schedule-Triggered Flow:</strong> runs on a defined schedule and selects records that meet configured criteria.</li><li><strong>Autolaunched Flow:</strong> runs without screens and can be invoked by other automation or supported platform entry points.</li><li><strong>Platform Event-Triggered Flow:</strong> starts when a platform event message is received.</li></ul>
+<h3>What is Apex?</h3>
+<p>Apex is Salesforce's strongly typed, object-oriented programming language. It provides programmatic control over data access, business logic, transactions, error handling and reusable services.</p>
+<p>Common automation entry points and patterns include:</p>
+<ul><li><strong>Apex Triggers:</strong> execute before or after DML events on records.</li><li><strong>Invocable Apex:</strong> exposes Apex methods to Flow and other supported automation tools.</li><li><strong>Queueable, Batch and Scheduled Apex:</strong> support asynchronous and scheduled processing patterns.</li><li><strong>Apex services and domain classes:</strong> encapsulate reusable business logic called by triggers, controllers, invocable actions or other Apex code.</li></ul>
+<h2>2. Flow vs Apex: a practical comparison</h2>
+<table><thead><tr><th>Dimension</th><th>Flow</th><th>Apex</th></tr></thead><tbody>
+<tr><td>Implementation</td><td>Visual, declarative configuration</td><td>Code-based implementation</td></tr>
+<tr><td>Best fit</td><td>Clearly defined business processes and straightforward automation</td><td>Complex logic, sophisticated data processing and granular control</td></tr>
+<tr><td>Maintenance</td><td>Can be understood by admins and developers when well structured</td><td>Requires coding skills, tests, reviews and deployment discipline</td></tr>
+<tr><td>Bulk processing</td><td>Platform bulkification helps, but complex high-volume designs need careful evaluation</td><td>Explicit control over collections, Maps, Sets, query strategy and DML</td></tr>
+<tr><td>Data structures</td><td>Flow resources and collections</td><td>Rich language data structures and reusable abstractions</td></tr>
+<tr><td>Transaction control</td><td>Platform-managed transaction behavior and supported fault handling</td><td>More granular control over savepoints, rollback and partial-success DML patterns</td></tr>
+<tr><td>Error handling</td><td>Fault connectors, error paths and supported custom errors</td><td>Exceptions, structured result handling, addError and custom logging</td></tr>
+<tr><td>Testing</td><td>Flow tests and scenario-based validation</td><td>Apex unit tests, mocks, assertions and test data patterns</td></tr>
+<tr><td>Extensibility</td><td>Can call Apex actions and orchestrate declarative steps</td><td>Can expose reusable invocable actions and services to Flow</td></tr>
+</tbody></table>
+<p>This is not a claim that one tool is universally faster or better. Actual performance depends on the design, record volume, query selectivity, automation density, downstream operations and platform limits.</p>
+<h2>3. When should you choose Flow?</h2>
+<p>Flow is usually a strong choice when the process is declarative, easy to express visually and likely to be maintained by admins or a mixed admin-developer team.</p>
+<ul><li>Simple field updates and straightforward cross-object updates.</li><li>Creating related records from a clear business event.</li><li>Sending notifications, emails or routing work to queues and users.</li><li>Guided user journeys such as intake, onboarding, service requests and data capture.</li><li>Scheduled follow-ups based on record dates or conditions.</li><li>Orchestrating a predictable process with decisions and reusable subflows.</li><li>Low-density record-triggered automation where the object has few independent automation paths and modest data volume.</li></ul>
+<p><strong>Example:</strong> When a Case is created with Priority = High, set an escalation flag, assign it to a defined queue and notify the support lead. If the rules are simple and the object has a manageable automation footprint, a record-triggered Flow is usually a good fit.</p>
+<h3>Before-save vs after-save record-triggered Flow</h3>
+<p>Use a before-save record-triggered Flow when you only need to update fields on the record that triggered the Flow. This avoids a separate update operation and is generally more efficient for that narrow purpose.</p>
+<p>Use an after-save Flow when you need to create or update related records, perform actions that require the record to be saved, send notifications or invoke other supported actions. Scheduled paths are useful when work must happen later relative to a record event and the scheduling behavior fits the requirement.</p>
+<h2>4. When should you choose Apex?</h2>
+<p>Apex becomes more appropriate when the requirement needs precise programmatic control, advanced data structures, sophisticated transaction handling or predictable performance at scale.</p>
+<ul><li>Complex calculations or algorithms that are awkward to express and maintain in Flow.</li><li>High-volume processing where collection-oriented query and DML strategies are essential.</li><li>Complex deduplication or expensive computations that should be reused within a transaction.</li><li>Advanced error handling, partial-success DML or savepoint and rollback behavior.</li><li>Reusable business logic shared by triggers, APIs, LWC controllers and invocable actions.</li><li>Complex integration orchestration, payload transformation or specialized callout behavior.</li><li>Scenarios where a well-designed trigger framework and service layer provide clearer governance than a large collection of automation paths.</li></ul>
+<p><strong>Example:</strong> A nightly process recalculates allocation values across a large portfolio of Opportunities, applies multi-level rules, handles duplicate relationships, logs record-level failures and retries eligible records. Batch Apex or another suitable Apex processing pattern may provide the control required. The exact design still depends on volume, latency, locking and retry requirements.</p>
+<h2>5. The hybrid approach: Flow + Invocable Apex</h2>
+<p>Flow and Apex are not competing technologies that must be kept completely separate. A hybrid architecture can combine declarative orchestration with code for the parts that genuinely need it.</p>
+<p>For example, a Screen Flow can collect user input, validate required answers and guide an operations user through a process. It can then call an Invocable Apex action to calculate a complex allocation, validate a large collection of records or create a structured integration payload.</p>
+<p>The Flow remains responsible for the user journey and orchestration. Apex encapsulates the complex computation in a reusable, bulk-safe unit.</p>
+<h3>Illustrative Invocable Apex action</h3>
+<pre><code>public with sharing class DiscountCalculatorAction {
+    public class Request {
+        @InvocableVariable(required=true)
+        public Decimal amount;
+
+        @InvocableVariable(required=true)
+        public Decimal discountPercent;
+    }
+
+    public class Response {
+        @InvocableVariable
+        public Decimal finalAmount;
+    }
+
+    @InvocableMethod(
+        label='Calculate Discounted Amount'
+        description='Calculates the amount after discount'
+    )
+    public static List&lt;Response&gt; calculate(List&lt;Request&gt; requests) {
+        List&lt;Response&gt; results = new List&lt;Response&gt;();
+
+        for (Request requestItem : requests) {
+            Response result = new Response();
+            Decimal discount =
+                requestItem.amount * requestItem.discountPercent / 100;
+            result.finalAmount = requestItem.amount - discount;
+            results.add(result);
+        }
+
+        return results;
+    }
+}</code></pre>
+<p>This example is intentionally small to demonstrate the Invocable Apex contract. A production implementation should validate nulls, numeric ranges, currency and rounding rules, define the appropriate sharing and CRUD/FLS behavior, and test bulk inputs and invalid requests.</p>
+<h2>6. A modern architecture lens: automation density</h2>
+<p>Salesforce's current Architect guidance for record-triggered automation introduces the idea of <strong>automation density</strong>. Instead of choosing Flow because the builder is an admin or Apex because the builder is a developer, assess the cumulative automation load on each object.</p>
+<p>Three dimensions are especially important:</p>
+<ol><li><strong>Automation quantity:</strong> How many flows, trigger actions and other automation components execute during one DML event?</li><li><strong>Record volume:</strong> How many records are processed in a transaction, including API loads, integrations and batch operations?</li><li><strong>Dependency sprawl:</strong> How many downstream updates and related-object operations are triggered by the initial change?</li></ol>
+<table><thead><tr><th>Automation density</th><th>Architectural direction</th><th>Why</th></tr></thead><tbody>
+<tr><td>Low</td><td>Record-Triggered Flow</td><td>Clear, relatively independent automation with modest volume and limited downstream dependencies.</td></tr>
+<tr><td>Medium</td><td>Record-Triggered Flow with Invocable Apex</td><td>Flow coordinates the process while Apex handles focused complex computation or data operations.</td></tr>
+<tr><td>High</td><td>Apex trigger architecture</td><td>Centralized entry point, explicit ordering, bulk-safe processing and better control over complex dependencies.</td></tr>
+</tbody></table>
+<p>This is an architectural heuristic, not a fixed numerical threshold. Evaluate the actual object workload, limits, transaction behavior, team capability and operational model. A low-density object may still need Apex for a specialized requirement, and a Flow may still be appropriate in parts of a larger Apex-led design.</p>
+<div class="callout"><strong>Important design guidance:</strong> For a given Salesforce object, aim for one primary entry point into record-triggered automation. Avoid creating a fragmented design where multiple independent Flows and Apex triggers compete to coordinate the same business process. Use Flow Trigger Explorer and a documented execution strategy to make the automation understandable.</div>
+<h2>7. Example: designing Opportunity automation</h2>
+<p>Consider a manufacturing organization with the following requirement when an Opportunity is marked Closed Won:</p>
+<ul><li>Update a simple onboarding status on the Opportunity.</li><li>Create an onboarding record related to the Account and Opportunity.</li><li>Calculate a complex allocation across multiple product lines.</li><li>Notify the implementation team.</li><li>Support bulk updates from an ERP integration.</li></ul>
+<p>A possible design decision:</p>
+<table><thead><tr><th>Requirement</th><th>Possible implementation</th><th>Reason</th></tr></thead><tbody>
+<tr><td>Set a field on the triggering Opportunity</td><td>Before-save Flow, if the object architecture is Flow-led</td><td>Simple same-record update</td></tr>
+<tr><td>Create a related onboarding record</td><td>After-save Flow</td><td>Declarative related-record creation</td></tr>
+<tr><td>Complex allocation across product lines</td><td>Invocable Apex or Apex service</td><td>Reusable, testable computation and collection handling</td></tr>
+<tr><td>Notify the implementation team</td><td>Flow action or supported notification mechanism</td><td>Simple orchestration step</td></tr>
+<tr><td>Handle high-volume, dependency-heavy processing</td><td>Apex-led trigger/service design, if density warrants it</td><td>Centralized orchestration and explicit bulk processing</td></tr>
+</tbody></table>
+<p>The table illustrates possible components, not a recommendation to create separate entry points for each row. The architecture should first choose the object's primary record-triggered entry point, then delegate to subflows or Apex services in a controlled sequence.</p>
+<h2>8. Performance, bulkification and governor limits</h2>
+<p>Flow and Apex execute on the same Salesforce platform and are subject to transaction-level resource limits. Flow is not a way to avoid Apex governor limits. If an element causes the transaction to exceed an enforced limit, the transaction can roll back even when the element has a fault connector.</p>
+<p>For either tool:</p>
+<ul><li>Design for batches and bulk operations, not only a single record edited in the UI.</li><li>Reduce unnecessary queries, DML operations and repeated updates.</li><li>Avoid automation that updates a record in a way that re-enters the same process without a clear recursion strategy.</li><li>Keep cross-object dependency chains short and intentional.</li><li>Use entry criteria so automation runs only when relevant fields or conditions change.</li><li>Test API and integration data loads as well as manual UI updates.</li><li>Monitor failures and transaction behavior in representative production-like volumes.</li></ul>
+<p>In Apex, query and update collections outside loops and use Maps and Sets to avoid repeated work. In Flow, use collection operations and avoid Get Records, Update Records or other database operations inside loops when the same work can be performed on a collection.</p>
+<h2>9. Error handling and observability</h2>
+<p>A production automation design must explain what happens when something fails.</p>
+<h3>Flow</h3>
+<ul><li>Connect fault paths for elements that can fail and decide whether to show a useful message, log the failure or route it for support.</li><li>Use fault connectors thoughtfully; a fault path does not guarantee that the entire transaction can commit if a governor limit or other transaction-level failure occurs.</li><li>For important processes, capture context such as record ID, Flow name, failed element, error message and correlation identifier where appropriate.</li><li>Use Flow error emails and operational monitoring as part of a broader support process.</li></ul>
+<h3>Apex</h3>
+<ul><li>Handle expected exceptions and use partial-success DML methods where the business requirement allows individual record failures.</li><li>Use structured logs and correlation IDs for integration and asynchronous processing.</li><li>Do not swallow exceptions silently. Preserve enough context for support teams to diagnose and recover.</li><li>Design retries to be safe and idempotent; repeated execution should not create duplicate downstream records or side effects.</li></ul>
+<h2>10. Maintainability and governance checklist</h2>
+<ol><li>Understand the business requirement and identify the record event or user journey that starts the process.</li><li>Check whether a formula, validation rule or standard platform feature can meet the requirement before creating automation.</li><li>Review all existing automation on the object before adding a new entry point.</li><li>Assess automation quantity, record volume and dependency sprawl.</li><li>Choose Flow, Apex or a hybrid approach based on the required behavior—not personal preference.</li><li>Define one primary entry point for record-triggered automation on the object and document the sequence.</li><li>Keep Flows focused, named consistently and decomposed into reusable subflows where appropriate.</li><li>Keep Apex modular, bulk-safe, testable and aligned with a consistent trigger/service architecture.</li><li>Enforce security in both declarative and programmatic paths.</li><li>Test single-record, bulk, integration, recursion, fault and negative scenarios.</li><li>Define monitoring, alerting, ownership and recovery procedures.</li><li>Review the design whenever new automation is introduced on the same object.</li></ol>
+<h2>11. Common mistakes to avoid</h2>
+<ul><li>Choosing Flow or Apex based only on who is building the solution.</li><li>Building one enormous Flow that handles unrelated business processes.</li><li>Creating multiple independent record-triggered entry points on the same object without a clear orchestration strategy.</li><li>Using Apex for simple field updates that a before-save Flow can handle efficiently.</li><li>Using Flow for complex, high-volume processing that needs advanced collection handling and transaction control.</li><li>Calling Invocable Apex without designing for bulk input.</li><li>Putting database operations inside Flow or Apex loops unnecessarily.</li><li>Assuming asynchronous execution automatically solves performance or limit problems.</li><li>Adding fault paths but failing to define logging, notification and recovery behavior.</li><li>Failing to regression-test existing automation when a new process is added.</li></ul>
+<h2>12. Developer and architect interview questions</h2>
+<ol><li>What are the main differences between Flow and Apex?</li><li>When would you use a before-save Flow instead of an after-save Flow?</li><li>When is Apex a better choice than Flow?</li><li>What is Invocable Apex, and how does Flow call it?</li><li>How do you make an Invocable Apex method bulk-safe?</li><li>What is automation density, and which dimensions influence it?</li><li>Why does Salesforce recommend one primary record-triggered entry point per object?</li><li>How would you design automation for an object with multiple Flows and Apex triggers already in place?</li><li>How do governor limits affect Flow and Apex in the same transaction?</li><li>What is the difference between a Flow fault path and an Apex exception handler?</li><li>How would you prevent recursion and repeated updates?</li><li>How would you test automation invoked by an integration that sends hundreds of records?</li></ol>
+<h2>13. Quick knowledge check</h2>
+<ol><li>Which Flow type is generally suited to updating fields on the record that triggered it before save?</li><li>Which Apex annotation exposes a method as an action that Flow can invoke?</li><li>What three dimensions are used to reason about automation density?</li><li>Does moving logic from Apex to Flow remove transaction governor limits?</li><li>What is the architectural risk of multiple independent automation entry points on the same object?</li></ol>
+<h2>Key takeaway</h2>
+<p>Flow and Apex are complementary tools. Flow is excellent for transparent, declarative business processes; Apex is better suited to complex algorithms, high-volume processing and granular transaction control. For record-triggered automation, evaluate the cumulative automation density of the object and establish one clear entry point. A thoughtful hybrid design often gives the best balance of admin-friendly orchestration and developer-level control.</p>
+<div class="callout"><strong>Next in the journey:</strong> Day 6 — Programming Fundamentals: OOP, abstraction, encapsulation and clean code for Salesforce developers.</div>
+<h2>Official Salesforce resources</h2>
+<ul><li><a href="https://architect.salesforce.com/docs/architect/decision-guides/guide/record-triggered.html" target="_blank" rel="noopener">Salesforce Architects — Record-Triggered Automation Decision Guide</a></li><li><a href="https://www.salesforce.com/blog/record-triggered-automation-apex-or-flow/" target="_blank" rel="noopener">Salesforce — Record-Triggered Automation: Apex or Flow?</a></li><li><a href="https://help.salesforce.com/s/articleView?id=sf.flow_considerations.htm&amp;language=en_US&amp;type=5" target="_blank" rel="noopener">Salesforce Help — Flow Limits and Considerations</a></li><li><a href="https://trailhead.salesforce.com/content/learn/modules/flow-basics" target="_blank" rel="noopener">Trailhead — Flow Basics</a></li><li><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_invoking_flow.htm" target="_blank" rel="noopener">Apex Developer Guide — Invocable Apex and Flow</a></li></ul>
+<div class="article-nav"><a href="../day-04/index.html">← Day 4: Salesforce Security Model</a><a href="../roadmap/index.html">30-Day Roadmap →</a></div>
+</article></main><div id="shared-footer"></div><script src="../../assets/js/layout.js"></script></body></html>
