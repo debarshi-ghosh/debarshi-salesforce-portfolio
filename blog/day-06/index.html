@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Programming fundamentals for Salesforce developers: problem solving, algorithms, variables, data types, control flow, methods, object-oriented programming, clean code and practical Apex exercises."><title>Day 6 — Programming Fundamentals | Debarshi Ghosh</title><link rel="stylesheet" href="../../assets/site.css"><style>
+.article-hero{padding:58px 0;background:#f1f6fd;border-bottom:1px solid #dbe7f5}.article-wrap{max-width:820px;margin:auto}.article-hero h1{font-size:clamp(2.2rem,5vw,3.5rem);line-height:1.13;margin:18px 0}.article-hero p{font-size:1.12rem;color:#53657c;line-height:1.75}.blog-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px}.blog-meta span{display:inline-block;line-height:1.5}.article-label{color:#2563eb;font-weight:800;letter-spacing:.12em;font-size:.8rem}.article-content{max-width:820px;margin:auto;padding:44px 22px 70px;line-height:1.85;color:#26364a}.article-content h2{font-size:1.8rem;line-height:1.3;margin:42px 0 14px;color:#0b2447}.article-content h3{font-size:1.2rem;margin:25px 0 8px;color:#163b70}.article-content p{margin:14px 0}.article-content ul,.article-content ol{padding-left:24px}.article-content li{margin:8px 0}.article-content a{color:#1459a6}.article-content pre{background:#0b1730;color:#e5efff;border-radius:12px;padding:18px;overflow:auto;font-size:.9rem}.article-content code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.article-content :not(pre)>code{background:#eaf1fb;padding:2px 5px;border-radius:4px}.callout{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:8px;margin:22px 0}.article-nav{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #dbe5f1;padding-top:24px;margin-top:48px}.article-content table{border-collapse:collapse;width:100%;margin:20px 0;font-size:.95rem}.article-content th,.article-content td{border:1px solid #dbe5f1;padding:10px;text-align:left;vertical-align:top}.article-content th{background:#eff6ff;color:#0b2447}
+</style></head><body><div id="shared-header"></div>
+<main><section class="article-hero"><div class="wrap article-wrap"><div class="article-label">SALESFORCE ENGINEERING JOURNEY · DAY 06</div><h1>Programming Fundamentals: Think Logically, Design Clearly, Write Better Code</h1><p>Build the core programming mindset behind maintainable Salesforce solutions—from problem decomposition and data types to methods, object-oriented design and clean code.</p><div class="blog-meta"><span>Beginner to intermediate</span><span>18–22 min read</span><span>Updated: November 2026</span></div></div></section>
+<article class="article-content">
+<p>Before learning Apex syntax, triggers or Lightning Web Components, it is important to understand the fundamentals that make any program work. Languages and frameworks change, but the ability to break down a problem, model data, control execution and organize responsibilities remains useful throughout a developer's career.</p>
+<p>In Salesforce projects, these fundamentals appear every day: validating an Opportunity, calculating a discount, processing a collection of Accounts, coordinating service requests or designing a reusable integration service.</p>
+<div class="callout"><strong>Core idea:</strong> Good programming is not about writing the maximum amount of code. It is about expressing the correct behavior clearly, safely and in a way that can be tested and maintained.</div>
+<h2>1. Start with problem solving, not code</h2>
+<p>Before opening the editor, make sure you understand the problem. A useful approach is to turn a business requirement into a sequence of explicit steps.</p>
+<ol><li><strong>Understand the expected outcome:</strong> What should happen, and for whom?</li><li><strong>Identify inputs:</strong> Which values or records are needed?</li><li><strong>Define rules:</strong> What conditions, calculations or validations apply?</li><li><strong>Identify outputs and side effects:</strong> What should be returned, created, updated or communicated?</li><li><strong>Consider edge cases:</strong> What if input is missing, duplicated, invalid or unexpectedly large?</li><li><strong>Write examples:</strong> Describe at least one normal case and one failure case.</li><li><strong>Choose the implementation:</strong> Only now decide which language features or Salesforce tools are appropriate.</li></ol>
+<p><strong>Example requirement:</strong> When a customer submits an installation request, the system should calculate an estimated service charge based on installation type and priority, reject incomplete requests, and return a clear result.</p>
+<p>Before coding, clarify which installation types exist, how priority changes the charge, whether currency rounding applies, and what should happen for an unsupported type. These decisions prevent hidden assumptions from becoming defects.</p>
+<h2>2. Algorithms and pseudocode</h2>
+<p>An algorithm is a finite sequence of steps for solving a problem. Pseudocode describes those steps in plain language without committing to a programming language.</p>
+<p>For the service-charge example:</p>
+<pre><code>INPUT installationType, priority
+
+IF installationType is missing
+    RETURN validation error
+
+LOOK UP base charge for installationType
+
+IF installationType is unsupported
+    RETURN validation error
+
+IF priority is urgent
+    APPLY urgent multiplier
+
+ROUND charge according to currency rules
+RETURN final charge</code></pre>
+<p>Pseudocode helps developers and business stakeholders agree on behavior before implementation. It also exposes missing rules and edge cases early.</p>
+<h3>Thinking about complexity</h3>
+<p>As programs grow, consider how the amount of work changes as the input grows. For example, checking each item in a list once is generally linear, often described as O(n). Comparing every item with every other item can become quadratic, O(n²). These are simplified measures of algorithmic time complexity; actual Salesforce performance also depends on database operations, selectivity, sharing, CPU use and platform limits.</p>
+<h2>3. Variables, constants and data types</h2>
+<p>A variable is a named location used by a program to hold a value. A data type defines what kind of value it can represent and which operations are valid.</p>
+<pre><code>String customerName = 'Northwind Manufacturing';
+Integer installationCount = 4;
+Decimal estimatedCharge = 12500.50;
+Boolean isApproved = false;
+Date requestedDate = Date.today();</code></pre>
+<p>These examples use Apex syntax. Similar concepts exist in JavaScript and most programming languages, although syntax and type systems differ.</p>
+<h3>Common data types in Apex</h3>
+<table><thead><tr><th>Type</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td><code>String</code></td><td>Text</td><td><code>'Kolkata'</code></td></tr><tr><td><code>Integer</code></td><td>Whole numbers</td><td><code>25</code></td></tr><tr><td><code>Long</code></td><td>Larger whole numbers</td><td><code>9000000000L</code></td></tr><tr><td><code>Decimal</code></td><td>Decimal values, useful for financial calculations</td><td><code>1250.75</code></td></tr><tr><td><code>Double</code></td><td>Floating-point values</td><td><code>12.5</code></td></tr><tr><td><code>Boolean</code></td><td>True or false</td><td><code>true</code></td></tr><tr><td><code>Date</code></td><td>Date without time</td><td><code>Date.today()</code></td></tr><tr><td><code>Datetime</code></td><td>Date and time</td><td><code>Datetime.now()</code></td></tr><tr><td><code>Id</code></td><td>Salesforce record identifier</td><td><code>accountRecord.Id</code></td></tr></tbody></table>
+<p>Apex is strongly typed: variables have declared types and the compiler checks many type errors before execution. Choose types deliberately. For example, use Decimal for currency calculations rather than relying on floating-point arithmetic where exact decimal precision matters.</p>
+<h3>Constants</h3>
+<p>A constant represents a value that should not be reassigned after initialization. In Apex, use <code>final</code> to express this intent:</p>
+<pre><code>public class InstallationPricing {
+    private static final Decimal URGENT_MULTIPLIER = 1.25;
+}</code></pre>
+<p>Named constants make business rules easier to identify and update than unexplained literal values scattered throughout the code.</p>
+<h2>4. Operators and expressions</h2>
+<p>Operators combine values to produce a result. Common categories include:</p>
+<ul><li><strong>Arithmetic:</strong> <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>mod</code>.</li><li><strong>Comparison:</strong> <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>.</li><li><strong>Logical:</strong> <code>&amp;&amp;</code> (AND), <code>||</code> (OR), <code>!</code> (NOT).</li><li><strong>Assignment:</strong> <code>=</code>, <code>+=</code>, <code>-=</code>.</li><li><strong>Conditional:</strong> ternary expressions such as <code>condition ? valueA : valueB</code>.</li></ul>
+<pre><code>Decimal baseCharge = 10000;
+Boolean isUrgent = true;
+
+Decimal finalCharge =
+    isUrgent ? baseCharge * 1.25 : baseCharge;</code></pre>
+<p>Use parentheses to make complex expressions clear. Avoid compressing several business conditions into one difficult-to-read line.</p>
+<h2>5. Control flow: decisions and repetition</h2>
+<p>Control flow determines which statements execute and how often.</p>
+<h3>Conditional statements</h3>
+<pre><code>if (installationType == 'Standard') {
+    estimatedDays = 5;
+} else if (installationType == 'Priority') {
+    estimatedDays = 2;
+} else {
+    throw new IllegalArgumentException(
+        'Unsupported installation type'
+    );
+}</code></pre>
+<p>Use <code>if</code>/<code>else</code> for branching logic. A <code>switch</code> statement can be clearer when one expression is compared against several known values.</p>
+<h3>Loops</h3>
+<pre><code>List&lt;String&gt; regions = new List&lt;String&gt;{
+    'East', 'West', 'North'
+};
+
+for (String region : regions) {
+    System.debug('Processing region: ' + region);
+}</code></pre>
+<p>Common loop forms include <code>for</code>, <code>while</code> and enhanced <code>for</code> loops. Choose the form that makes the stopping condition and iteration intent obvious.</p>
+<div class="callout"><strong>Salesforce-specific reminder:</strong> Do not perform SOQL queries or DML statements inside loops when processing records. Collect IDs and records, query once where possible, process collections in memory, and perform DML on collections. This is essential for bulk-safe Apex.</div>
+<h2>6. Methods: give one responsibility a name</h2>
+<p>A method is a named block of code that performs a task. It can accept parameters and return a value. Methods help divide a large problem into smaller, reusable units.</p>
+<pre><code>public class InstallationPricing {
+    public static Decimal calculateCharge(
+        Decimal baseCharge,
+        Boolean isUrgent
+    ) {
+        if (baseCharge == null || baseCharge &lt; 0) {
+            throw new IllegalArgumentException(
+                'Base charge must be zero or greater'
+            );
+        }
+
+        Decimal multiplier = isUrgent ? 1.25 : 1;
+        return baseCharge * multiplier;
+    }
+}</code></pre>
+<p>Call the method with explicit inputs:</p>
+<pre><code>Decimal charge =
+    InstallationPricing.calculateCharge(10000, true);
+
+System.debug(charge); // 12500</code></pre>
+<p>A good method name describes the action or result. A method should have a focused responsibility, a clear input contract and a predictable output.</p>
+<h3>Parameters, return values and side effects</h3>
+<ul><li><strong>Parameters</strong> are inputs supplied by the caller.</li><li><strong>Return values</strong> communicate the result back to the caller.</li><li><strong>Side effects</strong> change something outside the method's local calculation, such as updating an sObject or performing DML.</li></ul>
+<p>Pure calculation methods are often easier to test because the same inputs produce the same outputs without depending on database state. Keep data access and business calculations separate when that makes the design clearer.</p>
+<h2>7. Object-Oriented Programming (OOP)</h2>
+<p>Apex is an object-oriented language. OOP organizes software around classes and objects, combining state (data) and behavior (methods) into understandable units.</p>
+<h3>Classes and objects</h3>
+<p>A class is a blueprint; an object is an instance created from that blueprint. A class can define fields, properties, constructors and methods.</p>
+<pre><code>public class InstallationRequest {
+    public String requestNumber;
+    public String installationType;
+    public Boolean isUrgent;
+
+    public InstallationRequest(
+        String requestNumber,
+        String installationType,
+        Boolean isUrgent
+    ) {
+        this.requestNumber = requestNumber;
+        this.installationType = installationType;
+        this.isUrgent = isUrgent;
+    }
+
+    public String getSummary() {
+        return requestNumber + ' - ' + installationType;
+    }
+}</code></pre>
+<p>Create an object using <code>new</code>:</p>
+<pre><code>InstallationRequest request =
+    new InstallationRequest('IR-1001', 'Standard', false);
+
+System.debug(request.getSummary());</code></pre>
+<h3>The four commonly taught OOP principles</h3>
+<h4>1. Encapsulation</h4>
+<p>Encapsulation keeps an object's internal state and implementation details behind a controlled interface. In Apex, access modifiers such as <code>private</code>, <code>protected</code> and <code>public</code> help define what other code can access.</p>
+<pre><code>public class BankAccount {
+    private Decimal balance = 0;
+
+    public Decimal getBalance() {
+        return balance;
+    }
+
+    public void deposit(Decimal amount) {
+        if (amount == null || amount &lt;= 0) {
+            throw new IllegalArgumentException(
+                'Deposit must be greater than zero'
+            );
+        }
+        balance += amount;
+    }
+}</code></pre>
+<p>Callers cannot directly change the private balance field. They use the public method, where validation can be enforced.</p>
+<h4>2. Abstraction</h4>
+<p>Abstraction exposes what a component does while hiding unnecessary implementation detail. An interface is a common way to define a contract without prescribing how every implementation performs the work.</p>
+<pre><code>public interface NotificationService {
+    void sendNotification(String recipient, String message);
+}</code></pre>
+<p>A concrete class can implement the contract:</p>
+<pre><code>public class EmailNotificationService
+    implements NotificationService {
+
+    public void sendNotification(
+        String recipient,
+        String message
+    ) {
+        // Email delivery implementation goes here.
+    }
+}</code></pre>
+<p>Another class could implement the same interface using a different delivery channel. The calling code can depend on the contract rather than the specific implementation.</p>
+<h4>3. Inheritance</h4>
+<p>Inheritance allows a class to extend another class and reuse or specialize its behavior. Apex supports single class inheritance: a class can extend one class. The parent class must be <code>virtual</code> or <code>abstract</code> to allow extension.</p>
+<pre><code>public virtual class PaymentProcessor {
+    public virtual String processPayment() {
+        return 'Generic payment processing';
+    }
+}
+
+public class CardPaymentProcessor
+    extends PaymentProcessor {
+
+    public override String processPayment() {
+        return 'Processing card payment';
+    }
+}</code></pre>
+<p>Use inheritance when there is a genuine “is-a” relationship and a stable shared contract. Do not create deep inheritance trees merely to avoid repeating a few lines of code.</p>
+<h4>4. Polymorphism</h4>
+<p>Polymorphism allows different implementations to be used through a common parent type or interface. The same method call can result in different behavior depending on the actual object.</p>
+<pre><code>PaymentProcessor processor =
+    new CardPaymentProcessor();
+
+System.debug(processor.processPayment());</code></pre>
+<p>The variable is typed as the parent class, but the overridden implementation on the concrete object runs. This helps callers work with abstractions instead of hard-coding every implementation type.</p>
+<h2>8. Composition: build behavior from collaborating components</h2>
+<p>Composition means a class uses other objects to perform parts of its work. It is often a flexible alternative to inheritance.</p>
+<p>For example, an Installation Service may use a Pricing Service, a Notification Service and a Repository. Each component owns a focused responsibility, and the service coordinates them.</p>
+<pre><code>public class InstallationService {
+    private InstallationPricing pricing;
+
+    public InstallationService(InstallationPricing pricing) {
+        this.pricing = pricing;
+    }
+
+    public Decimal estimate(
+        Decimal baseCharge,
+        Boolean urgent
+    ) {
+        return pricing.calculateCharge(baseCharge, urgent);
+    }
+}</code></pre>
+<p>This example illustrates dependency injection through a constructor. In a larger system, interfaces can make dependencies replaceable and easier to test.</p>
+<h2>9. Clean code: make intent obvious</h2>
+<p>Code is read and changed more often than it is first written. Clean code reduces the effort needed to understand behavior and safely make changes.</p>
+<ul><li><strong>Use meaningful names:</strong> <code>calculateDiscount()</code> communicates more than <code>doWork()</code>.</li><li><strong>Keep methods focused:</strong> avoid mixing validation, querying, calculations, notifications and DML in one large method.</li><li><strong>Avoid unexplained literals:</strong> use named constants for business thresholds and fixed values.</li><li><strong>Reduce duplication:</strong> extract genuinely reusable logic, but do not create abstractions for every two-line operation.</li><li><strong>Prefer clear conditions:</strong> break complex Boolean expressions into named variables or focused methods.</li><li><strong>Document why, not the obvious what:</strong> comments should explain business context, constraints or non-obvious decisions.</li><li><strong>Keep responsibilities separate:</strong> data access, business rules and presentation concerns should not become unnecessarily entangled.</li><li><strong>Handle errors deliberately:</strong> validate inputs and provide useful, actionable error behavior.</li></ul>
+<h3>A practical naming example</h3>
+<pre><code>// Hard to understand
+Decimal x = a * 0.15;
+
+// Easier to understand
+Decimal partnerDiscountRate = 0.15;
+Decimal partnerDiscount = orderAmount * partnerDiscountRate;</code></pre>
+<p>Prefer clarity over cleverness. A few extra lines are worthwhile when they make business behavior easier to review.</p>
+<h2>10. Exceptions and defensive programming</h2>
+<p>Programs must handle invalid input and unexpected conditions. An exception represents an error or exceptional condition that interrupts normal execution.</p>
+<pre><code>public static Decimal calculateTax(Decimal amount) {
+    if (amount == null) {
+        throw new IllegalArgumentException(
+            'Amount is required'
+        );
+    }
+
+    if (amount &lt; 0) {
+        throw new IllegalArgumentException(
+            'Amount cannot be negative'
+        );
+    }
+
+    return amount * 0.18;
+}</code></pre>
+<p>Use <code>try</code>/<code>catch</code> when you can meaningfully handle or translate an exception. Do not catch every exception just to suppress it. Preserve useful context and choose whether the caller should receive a clear error or whether the operation should fail.</p>
+<h2>11. Testing: prove behavior, not just execution</h2>
+<p>Testing checks whether code behaves as expected for normal, boundary and invalid inputs. A good test should make the expected behavior explicit through assertions.</p>
+<pre><code>@IsTest
+private class InstallationPricingTest {
+    @IsTest
+    static void calculatesUrgentCharge() {
+        Decimal actual =
+            InstallationPricing.calculateCharge(10000, true);
+
+        System.assertEquals(
+            12500,
+            actual,
+            'Urgent charge should include the 25% multiplier'
+        );
+    }
+
+    @IsTest
+    static void rejectsNegativeCharge() {
+        try {
+            InstallationPricing.calculateCharge(-100, false);
+            System.assert(false, 'Expected validation exception');
+        } catch (IllegalArgumentException ex) {
+            System.assert(
+                ex.getMessage().contains('zero or greater')
+            );
+        }
+    }
+}</code></pre>
+<p>These tests illustrate a successful calculation and a validation failure. Real projects should also test boundary values, nulls, rounding rules and relevant integration or database behavior. Keep business logic testable without requiring unnecessary org data.</p>
+<h2>12. How these fundamentals map to Salesforce development</h2>
+<table><thead><tr><th>Programming concept</th><th>Where it appears in Salesforce</th></tr></thead><tbody><tr><td>Variables and data types</td><td>Apex variables, method parameters, LWC JavaScript state</td></tr><tr><td>Conditions and loops</td><td>Apex business rules, collection processing, LWC event handlers</td></tr><tr><td>Methods</td><td>Apex services, helper classes, controller methods</td></tr><tr><td>Classes and objects</td><td>Apex classes, sObjects, DTOs and service objects</td></tr><tr><td>Encapsulation</td><td>Access modifiers, private state and public methods</td></tr><tr><td>Abstraction</td><td>Interfaces, abstract classes and service contracts</td></tr><tr><td>Inheritance and polymorphism</td><td>Extensible Apex classes, interfaces and interchangeable implementations</td></tr><tr><td>Composition</td><td>Services collaborating with selectors, repositories and notification components</td></tr><tr><td>Testing</td><td>Apex unit tests, assertions, mocks and isolated business logic</td></tr></tbody></table>
+<h2>13. Hands-on exercises</h2>
+<div class="callout"><strong>Exercise 1 — Pricing calculator:</strong> Create an Apex class that accepts a base amount and installation priority. Calculate a surcharge, validate invalid inputs and return a Decimal result. Add tests for normal, urgent, zero and negative amounts.</div>
+<div class="callout"><strong>Exercise 2 — Request model:</strong> Create an <code>InstallationRequest</code> class with request number, type and priority. Add a constructor and a method that returns a readable summary. Make internal fields private and expose controlled access.</div>
+<div class="callout"><strong>Exercise 3 — Notification abstraction:</strong> Define a <code>NotificationService</code> interface. Implement two concrete classes—Email and In-App. Write a service that accepts the interface rather than depending on one concrete implementation.</div>
+<div class="callout"><strong>Exercise 4 — Refactor:</strong> Take a single long method that validates input, calculates a charge and builds a message. Split it into focused methods with meaningful names. Compare readability and testability before and after.</div>
+<div class="callout"><strong>Exercise 5 — Edge cases:</strong> For the pricing calculator, list at least eight edge cases before coding. Include nulls, zero, negative values, unusually large amounts, unsupported priorities and rounding behavior.</div>
+<h2>14. Developer interview questions</h2>
+<ol><li>What is the difference between a class and an object?</li><li>What is the difference between a variable and a constant?</li><li>Explain the four pillars of object-oriented programming.</li><li>How does encapsulation help protect an object's state?</li><li>What is the difference between abstraction and encapsulation?</li><li>When would you use an interface instead of an abstract class?</li><li>What is polymorphism, and how can it help design reusable services?</li><li>What is composition, and when might it be preferable to inheritance?</li><li>What makes a method easy to test?</li><li>How do you handle invalid input and exceptions?</li><li>What is the difference between a pure calculation method and a method with side effects?</li><li>How would you make a calculation service reusable across a trigger, Flow action and LWC controller?</li></ol>
+<h2>15. Quick knowledge check</h2>
+<ol><li>What is the difference between a class and an instance?</li><li>Which OOP principle controls access to internal state?</li><li>Which construct defines a contract that multiple classes can implement?</li><li>What is the purpose of a method's return type?</li><li>Why should database operations generally be kept out of loops in Apex?</li><li>Why are assertions important in unit tests?</li></ol>
+<h2>Key takeaway</h2>
+<p>Programming fundamentals are the foundation beneath every Salesforce implementation. Learn to break down problems, choose appropriate data types, control execution, create focused methods, model behavior with objects and use OOP principles deliberately. Combine those skills with clean code, defensive programming and meaningful tests—and your Apex solutions will be easier to extend, debug and maintain.</p>
+<div class="callout"><strong>Next in the journey:</strong> Day 7 — Apex Programming: classes, objects, methods, constructors, access modifiers and the structure of an Apex application.</div>
+<h2>Official Salesforce resources</h2>
+<ul><li><a href="https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-writing.html" target="_blank" rel="noopener">Salesforce Developers — Writing Apex</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes.html" target="_blank" rel="noopener">Salesforce Developers — Classes, Objects and Interfaces</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-constructors.html" target="_blank" rel="noopener">Salesforce Developers — Using Constructors</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-defining-methods.html" target="_blank" rel="noopener">Salesforce Developers — Class Methods</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-interfaces.html" target="_blank" rel="noopener">Salesforce Developers — Interfaces</a></li><li><a href="https://trailhead.salesforce.com/content/learn/modules/object-oriented-programming-for-admins" target="_blank" rel="noopener">Trailhead — Object-Oriented Programming</a></li></ul>
+<div class="article-nav"><a href="../day-05/index.html">← Day 5: Flow vs Apex</a><a href="../roadmap/index.html">30-Day Roadmap →</a></div>
+</article></main><div id="shared-footer"></div><script src="../../assets/js/layout.js"></script></body></html>
