@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A practical guide to Apex classes, objects, methods, constructors, access modifiers, static members, interfaces and testable Salesforce code."><title>Day 7 — Apex Programming: Classes, Objects, Methods and Constructors | Debarshi Ghosh</title><link rel="stylesheet" href="../../assets/site.css"><style>
+.article-hero{padding:58px 0;background:#f1f6fd;border-bottom:1px solid #dbe7f5}.article-wrap{max-width:820px;margin:auto}.article-hero h1{font-size:clamp(2.2rem,5vw,3.5rem);line-height:1.13;margin:18px 0}.article-hero p{font-size:1.12rem;color:#53657c;line-height:1.75}.blog-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px}.blog-meta span{display:inline-block;line-height:1.5}.article-label{color:#2563eb;font-weight:800;letter-spacing:.12em;font-size:.8rem}.article-content{max-width:820px;margin:auto;padding:44px 22px 70px;line-height:1.85;color:#26364a}.article-content h2{font-size:1.8rem;line-height:1.3;margin:42px 0 14px;color:#0b2447}.article-content h3{font-size:1.2rem;margin:25px 0 8px;color:#163b70}.article-content p{margin:14px 0}.article-content ul,.article-content ol{padding-left:24px}.article-content li{margin:8px 0}.article-content a{color:#1459a6}.article-content pre{background:#0b1730;color:#e5efff;border-radius:12px;padding:18px;overflow:auto;font-size:.9rem}.article-content code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.article-content :not(pre)>code{background:#eaf1fb;padding:2px 5px;border-radius:4px}.callout{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:8px;margin:22px 0}.article-nav{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #dbe5f1;padding-top:24px;margin-top:48px}.article-content table{border-collapse:collapse;width:100%;margin:20px 0;font-size:.95rem}.article-content th,.article-content td{border:1px solid #dbe5f1;padding:10px;text-align:left;vertical-align:top}.article-content th{background:#eff6ff;color:#0b2447}
+</style></head><body><div id="shared-header"></div><main><section class="article-hero"><div class="wrap article-wrap"><div class="article-label">SALESFORCE ENGINEERING JOURNEY · DAY 7</div><h1>Apex Programming: Classes, Objects, Methods and Constructors</h1><p>A practical guide to Apex classes, objects, methods, constructors, access modifiers, static members, interfaces and testable Salesforce code.</p><div class="blog-meta"><span>Intermediate</span><span>18–22 min read</span><span>Updated: November 2026</span></div></div></section><article class="article-content"><p>Apex is Salesforce's strongly typed, object-oriented programming language. It allows developers to execute business logic on the Salesforce Platform, interact with records, expose services and build reusable application behavior.</p><p>Knowing syntax is only the beginning. Good Apex design depends on understanding how classes are structured, how objects are created, how methods communicate and how constructors establish valid object state.</p><div class="callout"><strong>In this article:</strong> We move from programming fundamentals into the structure of Apex code: classes, instances, fields, properties, methods, constructors, access modifiers, static members, interfaces and practical design.</div>
+<h2>1. Where Apex fits</h2><p>Apex runs on Salesforce's server-side platform and is commonly used in triggers, controllers, services, asynchronous jobs, integrations and invocable actions. Apex works with Salesforce data through sObjects and platform APIs, while sharing and data access security must be considered explicitly.</p>
+<p>Apex is strongly typed and object-oriented. The compiler checks types, access and many syntax errors before code is deployed. Apex supports classes, interfaces, inheritance, exceptions, generics and collections, with platform-specific execution and governor limits.</p>
+<h2>2. Anatomy of an Apex class</h2><p>A class is a blueprint that groups related data and behavior. A class can contain fields, properties, constructors, methods, inner classes and static initialization logic.</p>
+<pre><code>public class ServiceRequest {
+    // Instance fields
+    private String requestNumber;
+    private String requestType;
+    private Boolean urgent;
+
+    // Constructor
+    public ServiceRequest(
+        String requestNumber,
+        String requestType,
+        Boolean urgent
+    ) {
+        this.requestNumber = requestNumber;
+        this.requestType = requestType;
+        this.urgent = urgent;
+    }
+
+    // Instance method
+    public String getSummary() {
+        return requestNumber + ' - ' + requestType;
+    }
+}</code></pre>
+<p>The class declaration defines the type. The fields store per-object state. The constructor initializes that state, and the method exposes behavior.</p>
+<h2>3. Objects and instances</h2><p>An object is an instance of a class. Use the <code>new</code> keyword to invoke a constructor and create an instance.</p>
+<pre><code>ServiceRequest requestA =
+    new ServiceRequest('SR-1001', 'Installation', false);
+
+ServiceRequest requestB =
+    new ServiceRequest('SR-1002', 'Repair', true);
+
+System.debug(requestA.getSummary());
+System.debug(requestB.getSummary());</code></pre>
+<p>Each instance has its own instance fields. Changing the state of one instance does not automatically change another instance of the same class.</p>
+<h3>Class vs. object vs. sObject</h3>
+<table><thead><tr><th>Concept</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td>Class</td><td>Blueprint defining state and behavior</td><td><code>ServiceRequest</code></td></tr><tr><td>Object / instance</td><td>Runtime instance of a class</td><td><code>new ServiceRequest(...)</code></td></tr><tr><td>sObject</td><td>Apex representation of a Salesforce record</td><td><code>Account</code>, <code>Case</code>, <code>Opportunity</code></td></tr></tbody></table>
+<p>An sObject is also an object in the programming sense, but it represents a Salesforce data record and participates in platform data operations. A custom Apex class is not automatically a database object.</p>
+<h2>4. Fields and properties</h2><p>Fields hold values. Properties provide a controlled way to expose values through getters and setters.</p>
+<pre><code>public class CustomerProfile {
+    private String emailAddress;
+
+    public String EmailAddress {
+        get {
+            return emailAddress;
+        }
+        set {
+            if (value != null && value.contains('@')) {
+                emailAddress = value;
+            }
+        }
+    }
+}</code></pre>
+<p>In Apex, <code>value</code> refers to the value being assigned in a property setter. Property accessors can be used to encapsulate validation or expose read-only state.</p>
+<h2>5. Methods: define behavior</h2><p>A method is a named block of code. Its signature includes the method name, parameter types and return type (or <code>void</code>). Methods can be instance methods or static methods.</p>
+<pre><code>public class DiscountService {
+    public Decimal calculateDiscount(
+        Decimal amount,
+        Decimal rate
+    ) {
+        if (amount == null || rate == null) {
+            throw new IllegalArgumentException('Inputs are required');
+        }
+        if (amount &lt; 0 || rate &lt; 0 || rate &gt; 1) {
+            throw new IllegalArgumentException('Invalid amount or rate');
+        }
+        return amount * rate;
+    }
+}</code></pre>
+<h3>Parameters and return values</h3><ul><li>Parameters are values passed by the caller.</li><li>The return type defines the value returned to the caller.</li><li><code>void</code> means the method does not return a value.</li><li>A method should have a focused responsibility and a clear contract.</li></ul>
+<h3>Method overloading</h3><p>Apex supports method overloading: methods in the same class can share a name when their parameter lists differ.</p><pre><code>public class GreetingService {
+    public String greet(String name) {
+        return 'Hello ' + name;
+    }
+
+    public String greet(String firstName, String lastName) {
+        return 'Hello ' + firstName + ' ' + lastName;
+    }
+}</code></pre>
+<p>Changing only the return type is not enough to overload a method; the parameter list must differ.</p>
+<h2>6. Constructors: initialize object state</h2><p>A constructor runs when an object is created using <code>new</code>. It has the same name as the class and no return type. Constructors are useful for ensuring an object starts in a valid state.</p>
+<pre><code>public class WorkOrderRequest {
+    public String accountId;
+    public String priority;
+    public Date requestedDate;
+
+    // No-argument constructor
+    public WorkOrderRequest() {
+        priority = 'Normal';
+        requestedDate = Date.today();
+    }
+
+    // Parameterized constructor
+    public WorkOrderRequest(
+        String accountId,
+        String priority
+    ) {
+        this.accountId = accountId;
+        this.priority = priority;
+        this.requestedDate = Date.today();
+    }
+}</code></pre>
+<p>Apex does not provide an implicit no-argument constructor once you define a constructor yourself. If callers need both forms, explicitly define both.</p>
+<h3>Constructor overloading and chaining</h3><p>You can provide multiple constructors with different parameter lists. Use <code>this(...)</code> as the first statement in a constructor to call another constructor in the same class, where appropriate.</p>
+<pre><code>public class ContactRequest {
+    public String lastName;
+    public String source;
+
+    public ContactRequest(String lastName) {
+        this(lastName, 'Web');
+    }
+
+    public ContactRequest(String lastName, String source) {
+        this.lastName = lastName;
+        this.source = source;
+    }
+}</code></pre>
+<h2>7. Access modifiers and visibility</h2><p>Access modifiers control where a class member can be accessed. Select the narrowest visibility that supports the intended design.</p>
+<table><thead><tr><th>Modifier</th><th>Meaning</th><th>Typical use</th></tr></thead><tbody><tr><td><code>private</code></td><td>Accessible only within the declaring class</td><td>Internal state and helper methods</td></tr><tr><td><code>protected</code></td><td>Accessible within the class and supported subclasses / namespace contexts</td><td>Extension points for inheritance</td></tr><tr><td><code>public</code></td><td>Accessible to other Apex code in the namespace</td><td>Application-level APIs</td></tr><tr><td><code>global</code></td><td>Broadest visibility across namespaces</td><td>Publicly exposed package or platform APIs when required</td></tr></tbody></table>
+<p>Do not use <code>global</code> by default. It creates a broader contract that can be difficult to change, particularly in managed packages.</p>
+<h2>8. Static vs. instance members</h2><p>Instance members belong to an object instance. Static members belong to the class itself and are accessed using the class name.</p>
+<pre><code>public class CurrencyRules {
+    public static final String DEFAULT_CURRENCY = 'INR';
+
+    public static Decimal roundToTwoPlaces(Decimal amount) {
+        return amount == null ? null : amount.setScale(2);
+    }
+}
+
+// Call static method without creating an instance
+Decimal rounded = CurrencyRules.roundToTwoPlaces(125.567);</code></pre>
+<p>Static methods cannot directly access instance fields because they do not run against a particular object. Use static members for stateless utilities or class-level constants, not as a substitute for thoughtful object design.</p>
+<h2>9. Interfaces and abstract classes</h2><p>An interface defines a contract that implementing classes must fulfill. It is useful when multiple implementations should be interchangeable.</p>
+<pre><code>public interface AssignmentStrategy {
+    Id selectOwner(Id accountId);
+}
+
+public class DefaultAssignmentStrategy
+    implements AssignmentStrategy {
+
+    public Id selectOwner(Id accountId) {
+        // Illustrative implementation
+        return UserInfo.getUserId();
+    }
+}</code></pre>
+<p>An abstract class can provide shared state or implementation while requiring subclasses to implement abstract methods. A class can implement multiple interfaces, while Apex class inheritance is single inheritance.</p>
+<h2>10. Inner classes and DTOs</h2><p>Inner classes are classes declared inside another class. They are useful for grouping types that are closely related, such as request and response structures for an integration or invocable action.</p>
+<pre><code>public class OrderSubmissionService {
+    public class Request {
+        public String externalOrderId;
+        public Decimal amount;
+    }
+
+    public class Response {
+        public Boolean success;
+        public String message;
+    }
+}</code></pre>
+<p>DTOs (Data Transfer Objects) carry data between layers or across API boundaries. Keep them focused on the data contract rather than embedding unrelated business behavior.</p>
+<h2>11. Applying Apex class design in a real project</h2><p>Imagine a manufacturing Salesforce org that receives installation requests. A maintainable design might separate responsibilities:</p>
+<table><thead><tr><th>Component</th><th>Responsibility</th></tr></thead><tbody><tr><td><code>InstallationRequest</code></td><td>Represents request data and its invariants</td></tr><tr><td><code>InstallationPricingService</code></td><td>Calculates charges and discounts</td></tr><tr><td><code>InstallationRepository</code></td><td>Encapsulates record retrieval and persistence where useful</td></tr><tr><td><code>InstallationNotificationService</code></td><td>Coordinates notification behavior</td></tr><tr><td><code>InstallationController</code></td><td>Exposes a focused interface to an LWC or supported UI entry point</td></tr></tbody></table>
+<p>This is an illustrative separation, not a mandatory class-per-concept rule. Avoid unnecessary abstraction for trivial functionality. Keep the architecture proportional to the complexity and reuse requirements.</p>
+<h2>12. Testing Apex classes</h2><p>Unit tests should verify outcomes and important edge cases. Test public behavior rather than private implementation details.</p><pre><code>@IsTest
+private class DiscountServiceTest {
+    @IsTest
+    static void calculatesDiscount() {
+        DiscountService service = new DiscountService();
+        Decimal result = service.calculateDiscount(1000, 0.10);
+        System.assertEquals(100, result);
+    }
+
+    @IsTest
+    static void rejectsInvalidRate() {
+        DiscountService service = new DiscountService();
+        try {
+            service.calculateDiscount(1000, 1.5);
+            System.assert(false, 'Expected invalid rate exception');
+        } catch (IllegalArgumentException ex) {
+            System.assert(ex.getMessage().contains('Invalid'));
+        }
+    }
+}</code></pre>
+<p>Also test null inputs, boundary values, expected exceptions and interactions with Salesforce data when the class performs queries or DML. Use dependency injection and interfaces when they make external dependencies easier to isolate.</p>
+<h2>13. Common mistakes</h2><ul><li>Creating one giant class that handles unrelated responsibilities.</li><li>Making every field and method public without a reason.</li><li>Forgetting to define a no-argument constructor when it is needed after adding a custom constructor.</li><li>Using static state to share mutable data between unrelated operations.</li><li>Writing methods with unclear names or too many parameters.</li><li>Using inheritance where composition would be simpler.</li><li>Exposing <code>global</code> APIs unnecessarily.</li><li>Writing tests that assert only code coverage rather than behavior.</li><li>Mixing UI, data access, business logic and integration concerns in one class.</li></ul>
+<h2>14. Hands-on exercises</h2><ol><li>Create a <code>WarrantyRequest</code> class with private fields, a constructor and getters.</li><li>Add two constructors: one that accepts a request number and another that also accepts priority.</li><li>Create a method that calculates warranty eligibility from purchase date and warranty duration.</li><li>Overload a method to support both a single Account and a collection of Accounts (the collection version should be bulk-safe).</li><li>Define a <code>NotificationChannel</code> interface and implement Email and In-App variants.</li><li>Write tests for valid, invalid, null and boundary inputs.</li></ol>
+<h2>15. Interview questions</h2><ol><li>What is the difference between a class and an object?</li><li>What is the purpose of a constructor?</li><li>Does Apex provide a default no-argument constructor if you define another constructor?</li><li>What is constructor overloading?</li><li>What is the difference between static and instance methods?</li><li>Can Apex overload methods by changing only the return type?</li><li>Explain private, protected, public and global visibility.</li><li>When would you use an interface or an abstract class?</li><li>What is an inner class, and where is it useful?</li><li>How would you design Apex classes for testability and reuse?</li></ol>
+<h2>Key takeaway</h2><p>Classes organize code, objects represent instances, methods define behavior and constructors establish valid state. Use access modifiers deliberately, keep responsibilities focused, prefer composition where it improves flexibility and write tests that prove behavior. These foundations prepare you to work confidently with Apex collections, triggers, services, integrations and asynchronous processing.</p>
+<h2>Official Salesforce resources</h2><ul><li><a href="https://developer.salesforce.com/docs/platform/apex/guide/apex_classes.htm" target="_blank" rel="noopener">Apex Developer Guide — Classes</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex/guide/apex_classes_constructors.htm" target="_blank" rel="noopener">Apex Developer Guide — Constructors</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex/guide/apex_classes_methods.htm" target="_blank" rel="noopener">Apex Developer Guide — Methods</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex/guide/apex_classes_interfaces.htm" target="_blank" rel="noopener">Apex Developer Guide — Interfaces</a></li><li><a href="https://trailhead.salesforce.com/content/learn/modules/apex_classes" target="_blank" rel="noopener">Trailhead — Apex Classes</a></li></ul><div class="article-nav"><a href="../day-06/index.html">← Day 6</a><a href="../day-08/index.html">Day 8 →</a><a href="../roadmap/index.html">30-Day Roadmap</a></div></article></main><div id="shared-footer"></div><script src="../../assets/js/layout.js"></script></body></html>
