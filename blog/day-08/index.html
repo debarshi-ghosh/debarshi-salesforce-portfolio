@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Learn how Apex Lists, Sets and Maps work, when to choose each collection, and how to combine them for bulk-safe Salesforce development."><title>Day 8 — Apex Collections: List, Set and Map with Practical Use Cases | Debarshi Ghosh</title><link rel="stylesheet" href="../../assets/site.css"><style>
+.article-hero{padding:58px 0;background:#f1f6fd;border-bottom:1px solid #dbe7f5}.article-wrap{max-width:820px;margin:auto}.article-hero h1{font-size:clamp(2.2rem,5vw,3.5rem);line-height:1.13;margin:18px 0}.article-hero p{font-size:1.12rem;color:#53657c;line-height:1.75}.blog-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px}.blog-meta span{display:inline-block;line-height:1.5}.article-label{color:#2563eb;font-weight:800;letter-spacing:.12em;font-size:.8rem}.article-content{max-width:820px;margin:auto;padding:44px 22px 70px;line-height:1.85;color:#26364a}.article-content h2{font-size:1.8rem;line-height:1.3;margin:42px 0 14px;color:#0b2447}.article-content h3{font-size:1.2rem;margin:25px 0 8px;color:#163b70}.article-content p{margin:14px 0}.article-content ul,.article-content ol{padding-left:24px}.article-content li{margin:8px 0}.article-content a{color:#1459a6}.article-content pre{background:#0b1730;color:#e5efff;border-radius:12px;padding:18px;overflow:auto;font-size:.9rem}.article-content code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.article-content :not(pre)>code{background:#eaf1fb;padding:2px 5px;border-radius:4px}.callout{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:8px;margin:22px 0}.article-nav{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #dbe5f1;padding-top:24px;margin-top:48px}.article-content table{border-collapse:collapse;width:100%;margin:20px 0;font-size:.95rem}.article-content th,.article-content td{border:1px solid #dbe5f1;padding:10px;text-align:left;vertical-align:top}.article-content th{background:#eff6ff;color:#0b2447}
+</style></head><body><div id="shared-header"></div><main><section class="article-hero"><div class="wrap article-wrap"><div class="article-label">SALESFORCE ENGINEERING JOURNEY · DAY 8</div><h1>Apex Collections: List, Set and Map with Practical Use Cases</h1><p>Learn how Apex Lists, Sets and Maps work, when to choose each collection, and how to combine them for bulk-safe Salesforce development.</p><div class="blog-meta"><span>Intermediate</span><span>18–22 min read</span><span>Updated: November 2026</span></div></div></section><article class="article-content"><p>Salesforce records are frequently processed in groups: an API integration may send hundreds of Accounts, a trigger can receive a batch of records, or a batch job may process large datasets. Apex collections help you store, organize, search and process these values efficiently.</p><p>The three core collection types are <strong>List</strong>, <strong>Set</strong> and <strong>Map</strong>. Choosing the right one can simplify code, avoid duplicate work, reduce repeated queries and support bulk-safe designs.</p><div class="callout"><strong>Core idea:</strong> Use a List when order and duplicates matter, a Set when you need unique values, and a Map when you need fast key-based lookup.</div>
+<h2>1. What are collections?</h2><p>A collection is a data structure that stores multiple values in one variable. Apex supports three primary collection types:</p><table><thead><tr><th>Collection</th><th>Stores</th><th>Key characteristic</th><th>Common use</th></tr></thead><tbody><tr><td>List</td><td>Ordered values</td><td>Allows duplicates; index-based access</td><td>Process query results or ordered records</td></tr><tr><td>Set</td><td>Unique values</td><td>Does not allow duplicate elements</td><td>Unique IDs, membership checks</td></tr><tr><td>Map</td><td>Key-value pairs</td><td>Each key maps to one value</td><td>Lookup records by ID or code</td></tr></tbody></table>
+<h2>2. List: ordered collection</h2><p>A List stores elements in a sequence and allows duplicates. Elements are accessed using a zero-based index.</p><pre><code>List&lt;String&gt; regions = new List&lt;String&gt;();
+regions.add('East');
+regions.add('West');
+regions.add('East');
+
+System.debug(regions[0]); // East
+System.debug(regions.size()); // 3</code></pre>
+<h3>Common List methods</h3><table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>add(value)</code></td><td>Add an element</td></tr><tr><td><code>add(index, value)</code></td><td>Insert at a position</td></tr><tr><td><code>get(index)</code> / <code>[index]</code></td><td>Retrieve an element</td></tr><tr><td><code>set(index, value)</code></td><td>Replace an element</td></tr><tr><td><code>remove(index)</code></td><td>Remove an element by index</td></tr><tr><td><code>size()</code></td><td>Number of elements</td></tr><tr><td><code>isEmpty()</code></td><td>Check whether it contains elements</td></tr><tr><td><code>contains(value)</code></td><td>Check whether a value exists</td></tr><tr><td><code>clear()</code></td><td>Remove all elements</td></tr><tr><td><code>sort()</code></td><td>Sort elements where the element type supports ordering</td></tr></tbody></table>
+<h3>Practical use: collect records for bulk DML</h3><pre><code>List&lt;Account&gt; accountsToUpdate = new List&lt;Account&gt;();
+
+for (Account acc : [
+    SELECT Id, Type
+    FROM Account
+    WHERE Type = 'Prospect'
+    LIMIT 200
+]) {
+    acc.Type = 'Customer';
+    accountsToUpdate.add(acc);
+}
+
+if (!accountsToUpdate.isEmpty()) {
+    update accountsToUpdate;
+}</code></pre><p>Records are accumulated first and updated in one DML statement rather than issuing DML inside the loop. The example includes a limit for illustration; production queries should be designed around actual selectivity and volume requirements.</p>
+<h2>3. Set: unique values only</h2><p>A Set stores unique elements. Adding a value already present does not create a second copy. Sets are useful for de-duplication and membership checks.</p><pre><code>Set&lt;String&gt; regions = new Set&lt;String&gt;{
+    'East', 'West', 'East'
+};
+
+System.debug(regions.size()); // 2
+System.debug(regions.contains('West')); // true</code></pre>
+<p>A Set does not provide a positional index like a List. Do not rely on an iteration order for business sequencing.</p>
+<h3>Practical use: collect unique parent IDs</h3><pre><code>List&lt;Case&gt; cases = [
+    SELECT Id, AccountId, Subject
+    FROM Case
+    WHERE AccountId != null
+    LIMIT 200
+];
+
+Set&lt;Id&gt; accountIds = new Set&lt;Id>();
+
+for (Case caseRecord : cases) {
+    accountIds.add(caseRecord.AccountId);
+}
+
+List&lt;Account&gt; relatedAccounts = [
+    SELECT Id, Name
+    FROM Account
+    WHERE Id IN :accountIds
+];</code></pre><p>Even if many Cases belong to the same Account, the Set stores each Account ID once. This is a common pattern for bulk-safe trigger and service logic.</p>
+<h3>Practical use: prevent duplicate processing</h3><pre><code>Set&lt;String&gt; processedExternalIds = new Set&lt;String&gt;();
+
+for (String externalId : incomingExternalIds) {
+    if (String.isBlank(externalId)) {
+        continue;
+    }
+
+    if (processedExternalIds.add(externalId)) {
+        // This is the first occurrence in this transaction's list.
+        processExternalId(externalId);
+    }
+}</code></pre><p>The <code>add()</code> method returns true when the element is newly added and false when it was already present, making it useful for detecting first occurrences.</p>
+<h2>4. Map: key-value lookup</h2><p>A Map stores key-value pairs. Each key is unique and points to one value. Maps are especially useful when you need to find a record or calculated value using an identifier.</p><pre><code>Map&lt;String, Integer&gt; regionCounts =
+    new Map&lt;String, Integer&gt;();
+
+regionCounts.put('East', 12);
+regionCounts.put('West', 8);
+
+System.debug(regionCounts.get('East')); // 12
+System.debug(regionCounts.containsKey('West')); // true</code></pre>
+<h3>Common Map methods</h3><table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>put(key, value)</code></td><td>Add or replace a key-value pair</td></tr><tr><td><code>get(key)</code></td><td>Retrieve value for a key; returns null when no mapping exists</td></tr><tr><td><code>containsKey(key)</code></td><td>Check whether a key exists</td></tr><tr><td><code>keySet()</code></td><td>Return the Set of keys</td></tr><tr><td><code>values()</code></td><td>Return a List of values</td></tr><tr><td><code>remove(key)</code></td><td>Remove a mapping by key</td></tr><tr><td><code>size()</code></td><td>Number of key-value pairs</td></tr><tr><td><code>isEmpty()</code></td><td>Check whether the Map is empty</td></tr><tr><td><code>clear()</code></td><td>Remove all mappings</td></tr></tbody></table>
+<h3>Practical use: build a Map of Accounts by ID</h3><pre><code>List&lt;Account&gt; accounts = [
+    SELECT Id, Name, Industry
+    FROM Account
+    WHERE Industry != null
+    LIMIT 200
+];
+
+Map&lt;Id, Account&gt; accountsById =
+    new Map&lt;Id, Account&gt;(accounts);
+
+for (Case caseRecord : [
+    SELECT Id, AccountId, Subject
+    FROM Case
+    WHERE AccountId IN :accountsById.keySet()
+]) {
+    Account parentAccount =
+        accountsById.get(caseRecord.AccountId);
+
+    System.debug(parentAccount.Name);
+}</code></pre><p>Apex supports constructing a Map from a List of sObjects. The record IDs become the keys, and the records become the values. This is a common way to avoid repeatedly scanning a List to find a related record.</p>
+<h2>5. Combining List, Set and Map in bulk-safe Apex</h2><p>Real projects often use all three collection types together. Consider a trigger handler that receives a List of Cases and needs to update a field based on the related Account's service tier.</p><pre><code>public class CaseServiceTierHandler {
+    public static void applyServiceTier(List&lt;Case&gt; caseRecords) {
+        Set&lt;Id&gt; accountIds = new Set&lt;Id&gt;();
+
+        for (Case caseRecord : caseRecords) {
+            if (caseRecord.AccountId != null) {
+                accountIds.add(caseRecord.AccountId);
+            }
+        }
+
+        if (accountIds.isEmpty()) {
+            return;
+        }
+
+        Map&lt;Id, Account&gt; accountsById =
+            new Map&lt;Id, Account&gt;([
+                SELECT Id, Service_Tier__c
+                FROM Account
+                WHERE Id IN :accountIds
+            ]);
+
+        List&lt;Case&gt; casesToUpdate = new List&lt;Case&gt;();
+
+        for (Case caseRecord : caseRecords) {
+            Account parentAccount =
+                accountsById.get(caseRecord.AccountId);
+
+            if (parentAccount != null) {
+                caseRecord.Service_Tier__c =
+                    parentAccount.Service_Tier__c;
+                casesToUpdate.add(caseRecord);
+            }
+        }
+
+        if (!casesToUpdate.isEmpty()) {
+            update casesToUpdate;
+        }
+    }
+}</code></pre>
+<p>This example demonstrates the collection pattern, but it should not be copied directly into a before-update trigger because updating the same triggering records again would be unnecessary and could cause recursion. In a before trigger, assign the field directly on the incoming records and do not issue DML for those records. In an after-trigger or service context, decide whether a separate update is actually required.</p>
+<div class="callout"><strong>Bulkification pattern:</strong> Start with the incoming List, gather unique related IDs in a Set, query related records once, index them in a Map, then process the original List using Map lookups.</div>
+<h2>6. Map grouping: one parent to many child records</h2><p>Sometimes you need the opposite structure: one key mapped to a List of related records. A Map whose values are Lists is a common grouping pattern.</p><pre><code>Map&lt;Id, List&lt;Case&gt;&gt; casesByAccount =
+    new Map&lt;Id, List&lt;Case&gt;&gt;();
+
+for (Case caseRecord : [
+    SELECT Id, AccountId, Subject
+    FROM Case
+    WHERE AccountId != null
+    LIMIT 500
+]) {
+    if (!casesByAccount.containsKey(caseRecord.AccountId)) {
+        casesByAccount.put(
+            caseRecord.AccountId,
+            new List&lt;Case&gt;()
+        );
+    }
+
+    casesByAccount.get(caseRecord.AccountId).add(caseRecord);
+}</code></pre>
+<p>Now the code can retrieve all Cases for a particular Account directly from the Map. This pattern is useful for parent-child calculations, notifications and data transformation.</p>
+<h2>7. Nested collections</h2><p>Collections can contain other collections. Common examples include <code>Map&lt;Id, List&lt;Case&gt;&gt;</code>, <code>List&lt;Set&lt;Id&gt;&gt;</code> and <code>Map&lt;String, Map&lt;Id, Decimal&gt;&gt;</code>. Use nested collections when they represent a clear grouping or relationship; avoid unnecessary nesting that makes the data structure hard to understand.</p>
+<h2>8. Choosing the right collection</h2><table><thead><tr><th>Requirement</th><th>Recommended collection</th><th>Reason</th></tr></thead><tbody><tr><td>Preserve processing sequence</td><td>List</td><td>Index-based ordered collection</td></tr><tr><td>Keep repeated IDs only once</td><td>Set</td><td>Unique elements</td></tr><tr><td>Find Account by Account Id</td><td>Map&lt;Id, Account&gt;</td><td>Direct key-based lookup</td></tr><tr><td>Group Cases by Account</td><td>Map&lt;Id, List&lt;Case&gt;&gt;</td><td>One parent key maps to multiple children</td></tr><tr><td>Track processed integration keys</td><td>Set&lt;String&gt;</td><td>Duplicate detection</td></tr><tr><td>Store ordered validation messages</td><td>List&lt;String&gt;</td><td>Preserves sequence and allows repeated messages</td></tr></tbody></table>
+<h2>9. Collection performance and common mistakes</h2><ul><li>Use a Map instead of repeatedly looping through a List to find a record by ID.</li><li>Use a Set to de-duplicate IDs before a SOQL query.</li><li>Do not rely on Set or Map iteration order for business ordering. Sort an appropriate List when order matters.</li><li>Check for null keys and values where they are possible.</li><li>Check whether a Map contains a key when a null value could be ambiguous.</li><li>Avoid querying or performing DML inside loops.</li><li>Do not mutate a collection in a way that invalidates the loop currently iterating over it.</li><li>Choose collection element types precisely, such as <code>List&lt;Account&gt;</code> rather than an untyped collection where possible.</li><li>Remember that collection operations still consume CPU and heap; a Map is not a substitute for sensible data-volume design.</li></ul>
+<h2>10. Collections and SOQL</h2><p>SOQL commonly returns a List of sObjects. You can pass a Set of IDs into a bind expression using <code>IN</code>, and you can construct a Map from a List of queried sObjects.</p><pre><code>Set&lt;Id&gt; accountIds = new Set&lt;Id&gt;();
+
+// Populate accountIds from business logic...
+
+List&lt;Contact&gt; contacts = [
+    SELECT Id, Name, AccountId
+    FROM Contact
+    WHERE AccountId IN :accountIds
+];
+
+Map&lt;Id, Contact&gt; contactsById =
+    new Map&lt;Id, Contact&gt;(contacts);</code></pre>
+<p>SOQL bind variables help keep values separate from query text. Always consider query selectivity, returned row volume, field requirements and sharing/security behavior.</p>
+<h2>11. Hands-on exercises</h2><ol><li>Create a List of 10 Account names, add a duplicate and print the total count.</li><li>Convert the List into a Set and compare the sizes.</li><li>Query a group of Contacts and build a Map keyed by Contact ID.</li><li>Build a Map of Account ID to List of Contacts, grouping Contacts by Account.</li><li>Given a List of Cases, collect unique Account IDs and query the parent Accounts in one SOQL statement.</li><li>Refactor a nested loop that searches for a parent Account into a Map-based lookup.</li><li>Write tests for empty collections, duplicate values, missing keys and records without parent relationships.</li></ol>
+<h2>12. Interview questions</h2><ol><li>What is the difference between List, Set and Map?</li><li>Can a List contain duplicate values?</li><li>Does a Set support index-based access?</li><li>What happens when you add a duplicate element to a Set?</li><li>How do you retrieve all keys or values from a Map?</li><li>What does Map.get() return when the key is not present?</li><li>How do you create a Map of Account records keyed by Account ID?</li><li>How would you group multiple Contacts under each Account?</li><li>Why are Sets commonly used with SOQL IN clauses?</li><li>How do collections help bulkify Apex triggers?</li><li>Why should you avoid relying on Map or Set iteration order?</li><li>How would you replace a nested loop with a Map lookup?</li></ol>
+<h2>Key takeaway</h2><p>Lists preserve a sequence and allow duplicates, Sets store unique values, and Maps connect keys to values for efficient lookup. In Salesforce development, combining these collections is fundamental to bulk-safe triggers, efficient SOQL patterns, data transformation and integration processing. Choose the structure that matches the problem, then test it with realistic volumes and edge cases.</p>
+<h2>Official Salesforce resources</h2><ul><li><a href="https://developer.salesforce.com/docs/platform/apex/guide/langCon_apex_collections.htm" target="_blank" rel="noopener">Apex Developer Guide — Collections</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex/guide/langCon_apex_collections_lists.htm" target="_blank" rel="noopener">Apex Developer Guide — Lists</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex/guide/langCon_apex_collections_sets.htm" target="_blank" rel="noopener">Apex Developer Guide — Sets</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex/guide/langCon_apex_collections_maps.htm" target="_blank" rel="noopener">Apex Developer Guide — Maps</a></li><li><a href="https://trailhead.salesforce.com/content/learn/modules/apex_database/apex_database_collections" target="_blank" rel="noopener">Trailhead — Use Collections</a></li></ul><div class="article-nav"><a href="../day-07/index.html">← Day 7</a><a href="../day-09/index.html">Day 9 →</a><a href="../roadmap/index.html">30-Day Roadmap</a></div></article></main><div id="shared-footer"></div><script src="../../assets/js/layout.js"></script></body></html>
