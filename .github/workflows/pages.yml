@@ -1,4 +1,5 @@
 name: Deploy portfolio to GitHub Pages
+# Publish from a fresh workflow run; do not rerun failed upload jobs.
 
 on:
   push:
