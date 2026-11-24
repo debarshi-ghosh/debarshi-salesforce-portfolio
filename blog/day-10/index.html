@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Understand the difference between structured SOQL queries and text-based SOSL search, with Apex examples, decision guidance and practical use cases."><title>Day 10 — SOSL vs SOQL: Search Strategies and When to Use Each | Debarshi Ghosh</title><link rel="stylesheet" href="../../assets/site.css"><style>
+.article-hero{padding:58px 0;background:#f1f6fd;border-bottom:1px solid #dbe7f5}.article-wrap{max-width:820px;margin:auto}.article-hero h1{font-size:clamp(2.2rem,5vw,3.5rem);line-height:1.13;margin:18px 0}.article-hero p{font-size:1.12rem;color:#53657c;line-height:1.75}.blog-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px}.blog-meta span{display:inline-block;line-height:1.5}.article-label{color:#2563eb;font-weight:800;letter-spacing:.12em;font-size:.8rem}.article-content{max-width:820px;margin:auto;padding:44px 22px 70px;line-height:1.85;color:#26364a}.article-content h2{font-size:1.8rem;line-height:1.3;margin:42px 0 14px;color:#0b2447}.article-content h3{font-size:1.2rem;margin:25px 0 8px;color:#163b70}.article-content p{margin:14px 0}.article-content ul,.article-content ol{padding-left:24px}.article-content li{margin:8px 0}.article-content a{color:#1459a6}.article-content pre{background:#0b1730;color:#e5efff;border-radius:12px;padding:18px;overflow:auto;font-size:.9rem}.article-content code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.article-content :not(pre)>code{background:#eaf1fb;padding:2px 5px;border-radius:4px}.callout{background:#eff6ff;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:8px;margin:22px 0}.article-nav{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #dbe5f1;padding-top:24px;margin-top:48px}.article-content table{border-collapse:collapse;width:100%;margin:20px 0;font-size:.95rem}.article-content th,.article-content td{border:1px solid #dbe5f1;padding:10px;text-align:left;vertical-align:top}.article-content th{background:#eff6ff;color:#0b2447}
+</style></head><body><div id="shared-header"></div><main><section class="article-hero"><div class="wrap article-wrap"><div class="article-label">SALESFORCE ENGINEERING JOURNEY · DAY 10</div><h1>SOSL vs SOQL: Search Strategies and When to Use Each</h1><p>Understand the difference between structured SOQL queries and text-based SOSL search, with Apex examples, decision guidance and practical use cases.</p><div class="blog-meta"><span>Intermediate</span><span>15–20 min read</span><span>Updated: November 2026</span></div></div></section><article class="article-content"><p>Salesforce developers often need to locate records using a known identifier, a set of business filters, or a phrase typed by a user. SOQL and SOSL both retrieve Salesforce data, but they solve different problems. Choosing the right one affects user experience, query design and performance.</p>
+<div class="callout"><strong>Quick rule:</strong> Use SOQL when you know which object to query and need structured filters or relationships. Use SOSL when you need text search across multiple objects and fields.</div>
+<h2>1. What SOQL is designed for</h2><p>SOQL retrieves records from a specified object using structured criteria. It is the right fit when the application knows the object and the conditions that define the result.</p><pre><code>List&lt;Account&gt; accounts = [
+    SELECT Id, Name, Industry, BillingCity
+    FROM Account
+    WHERE Industry = 'Manufacturing'
+      AND BillingCountry = 'India'
+    ORDER BY Name
+];</code></pre><p>SOQL supports relationship queries, aggregates, grouping, ordering, limits, semi-joins and anti-joins. It is ideal for list views, related-record retrieval, calculations and data processing.</p>
+<h2>2. What SOSL is designed for</h2><p>SOSL (Salesforce Object Search Language) performs text-based search across multiple objects and fields. It is useful when a user enters a phrase and the application does not know which object contains the matching record.</p><pre><code>List&lt;List&lt;SObject&gt;&gt; results = [
+    FIND 'Acme' IN ALL FIELDS
+    RETURNING
+        Account(Id, Name, Industry),
+        Contact(Id, Name, Email),
+        Lead(Id, Name, Company)
+];</code></pre><p>The outer result is a List containing one result List for each object in the <code>RETURNING</code> clause, in the same order as the objects specified. Cast each inner result to the expected sObject type before using it.</p>
+<h2>3. Side-by-side comparison</h2><table><thead><tr><th>Dimension</th><th>SOQL</th><th>SOSL</th></tr></thead><tbody><tr><td>Primary purpose</td><td>Structured record retrieval</td><td>Text search</td></tr><tr><td>Object scope</td><td>One object in the FROM clause, with relationship traversal</td><td>Multiple objects in RETURNING</td></tr><tr><td>Matching model</td><td>Field filters and conditions</td><td>Search terms against indexed text fields</td></tr><tr><td>Relationships</td><td>Parent-child relationship queries</td><td>Does not replace relationship queries</td></tr><tr><td>Aggregates</td><td>Supports aggregate functions and GROUP BY</td><td>Not an aggregate-query language</td></tr><tr><td>Best fit</td><td>Known object, known criteria</td><td>Unknown object, text entered by a user</td></tr></tbody></table>
+<h2>4. Search scope and field scope in SOSL</h2><p>SOSL lets you choose which fields to search:</p><ul><li><code>IN NAME FIELDS</code> searches name-related fields.</li><li><code>IN EMAIL FIELDS</code> searches email fields.</li><li><code>IN PHONE FIELDS</code> searches phone fields.</li><li><code>IN SIDEBAR FIELDS</code> uses the search fields associated with sidebar search.</li><li><code>IN ALL FIELDS</code> searches across searchable fields, subject to Salesforce search behavior and indexing.</li></ul><pre><code>FIND 'debarshi@example.com' IN EMAIL FIELDS
+RETURNING Contact(Id, Name, Email)</code></pre><p>Choose the narrowest field scope that satisfies the requirement. It helps make intent clear and avoids searching more broadly than necessary.</p>
+<h2>5. Search terms, wildcards and user input</h2><p>SOSL supports search expressions, including phrases and wildcard patterns. The asterisk (<code>*</code>) can represent zero or more characters, and the question mark (<code>?</code>) can represent a single character in supported search contexts. Leading wildcards are not supported. Search behavior is based on the Salesforce search index, so SOSL is not a substitute for exact database equality checks.</p><pre><code>// Example search expression
+FIND 'Acme*' IN NAME FIELDS
+RETURNING Account(Id, Name), Contact(Id, Name)</code></pre><p>When using a user-entered term in Apex, validate blank input and use a bind variable rather than concatenating the input into query text:</p><pre><code>public with sharing class GlobalSearchService {
+    public static List&lt;List&lt;SObject&gt;&gt; searchRecords(String term) {
+        if (String.isBlank(term)) {
+            return new List&lt;List&lt;SObject&gt;&gt;();
+        }
+
+        String searchTerm = term.trim() + '*';
+
+        return [
+            FIND :searchTerm IN NAME FIELDS
+            RETURNING
+                Account(Id, Name),
+                Contact(Id, Name, Email),
+                Lead(Id, Name, Company)
+            LIMIT 200
+        ];
+    }
+}</code></pre><p>Use the appropriate escaping and search-term rules for the experience you are building. Binding a term separates it from query syntax; it does not mean every arbitrary user string is a valid or useful search expression.</p>
+<h2>6. Reading SOSL results in Apex</h2><pre><code>List&lt;List&lt;SObject&gt;&gt; searchResults = [
+    FIND 'Acme' IN ALL FIELDS
+    RETURNING
+        Account(Id, Name),
+        Contact(Id, Name, Email)
+];
+
+List&lt;Account&gt; matchedAccounts =
+    (List&lt;Account&gt;) searchResults[0];
+
+List&lt;Contact&gt; matchedContacts =
+    (List&lt;Contact&gt;) searchResults[1];
+
+for (Account accountRecord : matchedAccounts) {
+    System.debug(accountRecord.Name);
+}</code></pre><p>Remember that each result bucket corresponds to one RETURNING object. A missing or empty bucket is different from a null result; check list sizes before accessing indexes when the query shape is built dynamically.</p>
+<h2>7. When to choose SOQL</h2><ul><li>The user selected an object or the workflow already knows the record type.</li><li>You need exact or structured conditions, date ranges, status filters or foreign-key filters.</li><li>You need parent-child relationship data.</li><li>You need aggregate calculations such as counts, sums or grouped totals.</li><li>You need a predictable dataset for business processing or DML.</li></ul>
+<h2>8. When to choose SOSL</h2><ul><li>You are building a global search box across Accounts, Contacts, Leads or other supported objects.</li><li>The user enters a name, email, phone number or phrase and does not know where the record lives.</li><li>You need text matching across multiple object types in one search operation.</li><li>You want search-oriented matching rather than a known set of structured filters.</li></ul>
+<h2>9. Can you combine SOQL and SOSL?</h2><p>Yes. A common pattern is to use SOSL to discover candidate records and then use SOQL to retrieve structured details or related records. For example, a service console search may find matching Accounts and Contacts with SOSL, then query selected Account IDs for related open Cases using SOQL.</p><pre><code>// Step 1: discover records across object types
+List&lt;List&lt;SObject&gt;&gt; matches = [
+    FIND 'Acme' IN NAME FIELDS
+    RETURNING Account(Id, Name), Contact(Id, Name, AccountId)
+];
+
+List&lt;Account&gt; accounts = (List&lt;Account&gt;) matches[0];
+Set&lt;Id&gt; accountIds = new Map&lt;Id, Account&gt;(accounts).keySet();
+
+// Step 2: retrieve structured related data
+List&lt;Case&gt; openCases = [
+    SELECT Id, CaseNumber, Subject, AccountId, Status
+    FROM Case
+    WHERE AccountId IN :accountIds
+      AND IsClosed = false
+    ORDER BY CreatedDate DESC
+];</code></pre><p>This separation keeps responsibilities clear: SOSL finds candidates by text; SOQL retrieves records based on known IDs and business conditions.</p>
+<h2>10. Limits, indexing and practical considerations</h2><ul><li>SOSL relies on the Salesforce search index. Newly created or recently updated data may not be immediately searchable.</li><li>SOSL is subject to search result limits; design the UI for a bounded result set and refine the search when necessary.</li><li>SOQL is subject to query-row, CPU, heap and transaction limits in Apex. Large-volume processing needs an appropriate asynchronous design.</li><li>Do not use SOSL for exact field equality, complex relationship filtering or aggregate calculations.</li><li>Do not use SOQL as a substitute for broad multi-object text search when the target object is unknown.</li><li>Apply the right security model and verify object/field access for the consuming user.</li><li>Test search with realistic terms, partial input, punctuation, blank strings and records across the relevant objects.</li></ul>
+<h2>11. Decision checklist</h2><table><thead><tr><th>Question</th><th>Choose</th></tr></thead><tbody><tr><td>Do I know the object and need field-based conditions?</td><td>SOQL</td></tr><tr><td>Do I need parent-child relationships or aggregates?</td><td>SOQL</td></tr><tr><td>Do I need to search several object types using a phrase?</td><td>SOSL</td></tr><tr><td>Do I need exact filtering by a known record ID or status?</td><td>SOQL</td></tr><tr><td>Do I need to discover records before loading related data?</td><td>SOSL, then SOQL if needed</td></tr></tbody></table>
+<h2>12. Hands-on exercises</h2><ol><li>Write a SOQL query to retrieve Accounts filtered by industry and billing country.</li><li>Write a relationship query to retrieve Contacts and their Account names.</li><li>Use SOSL to search a phrase across Account, Contact and Lead.</li><li>Change the SOSL field scope from ALL FIELDS to NAME FIELDS and compare results.</li><li>Bind a search term from Apex and handle blank input safely.</li><li>Use SOSL to find candidate Accounts, then SOQL to retrieve their open Cases.</li><li>Build a simple search UI that shows results grouped by object type.</li></ol>
+<h2>13. Interview questions</h2><ol><li>What is the fundamental difference between SOQL and SOSL?</li><li>Can SOSL search multiple objects in one statement?</li><li>What does the RETURNING clause do?</li><li>What is the structure of SOSL results in Apex?</li><li>When would you use IN NAME FIELDS instead of IN ALL FIELDS?</li><li>Why might a newly created record not appear immediately in SOSL results?</li><li>Can SOSL perform aggregate queries?</li><li>How can SOSL and SOQL be combined in one search workflow?</li><li>Why should you use bind variables for user-entered search terms?</li></ol>
+<h2>Key takeaway</h2><p>SOQL and SOSL are complementary, not competing tools. SOQL is for structured queries against a known object and its relationships. SOSL is for text-based discovery across multiple objects. A well-designed Salesforce application chooses based on the user's search intent, then retrieves only the data required to complete the task.</p>
+<h2>Official Salesforce resources</h2><ul><li><a href="https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/" target="_blank" rel="noopener">SOQL and SOSL Reference</a></li><li><a href="https://trailhead.salesforce.com/content/learn/modules/apex_database" target="_blank" rel="noopener">Trailhead — Apex Database</a></li><li><a href="https://developer.salesforce.com/docs/platform/apex/guide/apex_dynamic_soql.htm" target="_blank" rel="noopener">Apex Developer Guide — Dynamic SOQL and SOSL</a></li></ul><div class="article-nav"><a href="../day-09/index.html">← Day 9</a><a href="../day-11/index.html">Day 11 →</a><a href="../roadmap/index.html">30-Day Roadmap</a></div></article></main><div id="shared-footer"></div><script src="../../assets/js/layout.js"></script></body></html>
